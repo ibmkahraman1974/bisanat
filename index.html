@@ -1244,24 +1244,10 @@ const NAMED_HYPER_IMAGES = {
 };
 
 async function loadHyperImages(slug){
-  const files = [];
   if(NAMED_HYPER_IMAGES[slug]){
-    /* İsimli dosya listesi: sırayı koru, klasörde gerçekten var olanları al */
-    for(const file of NAMED_HYPER_IMAGES[slug]){
-      if(await probeImage(hyperImgPath(slug, file))) files.push(file);
-    }
-    return files;
+    return await probeNamedList(hyperImgPath, slug, NAMED_HYPER_IMAGES[slug]);
   }
-  let misses = 0;
-  for(let i = 1; i <= 60; i++){
-    let found = null;
-    for(const file of candidateFiles(i)){
-      if(await probeImage(hyperImgPath(slug, file))){ found = file; break; }
-    }
-    if(found){ files.push(found); misses = 0; }
-    else { misses++; if(misses > PROBE_GAP) break; }
-  }
-  return files;
+  return await probeNumberedFolder(hyperImgPath, slug, 60);
 }
 
 async function renderHyperGrid(){
@@ -1628,7 +1614,7 @@ function findCat(slug){ return CATEGORIES.find(c=>c.slug===slug); }
    sonraki numarayı kullanıp klasöre atmanız yeterli, kodda hiçbir
    değişiklik gerekmez. */
 const piecesCache = {}; // slug -> [{file, title, desc}]
-const PROBE_EXTS  = ['webp','jpg','jpeg','png','gif','avif'];
+const PROBE_EXTS  = ['webp']; /* atölyede sadece webp kullanılıyor; diğer uzantılar denenmeyip gereksiz 404 istekleri önleniyor */
 const MAX_PROBE   = 500; // güvenlik sınırı: klasör başına en fazla bu kadar görsel denenir
 const PROBE_GAP   = 3;   // bir numara bulunamazsa, klasörü hemen bitmiş saymadan bu kadar boşluğa tahammül et (1,2,4 gibi atlamalar)
 
@@ -1821,36 +1807,72 @@ function probeImage(url){
   });
 }
 
-async function loadPieces(slug){
-  if(piecesCache[slug]) return piecesCache[slug];
+/* Bir aday URL listesinden ilk var olanı PARALEL biçimde bulur (hepsini aynı anda
+   dener, ilk yüklenen kazanır). Eskiden bu adaylar tek tek, sırayla ve birbirini
+   bekleyerek deneniyordu; her "yok" cevabı bir ağ round-trip'i demekti ve kartlar
+   bu yüzden sırayla, çok yavaş açılıyordu. */
+function probeAny(urls){
+  return new Promise(resolve=>{
+    if(!urls.length){ resolve(null); return; }
+    let remaining = urls.length;
+    let done = false;
+    urls.forEach(url=>{
+      const img = new Image();
+      img.onload = ()=>{ if(!done){ done = true; resolve(url); } };
+      img.onerror = ()=>{
+        remaining--;
+        if(remaining === 0 && !done) resolve(null);
+      };
+      img.src = url;
+    });
+  });
+}
+
+/* İsimli bir dosya listesini paralel olarak doğrular, orijinal sırayı korur. */
+async function probeNamedList(basePathFn, slug, list){
+  const results = await Promise.all(list.map(file =>
+    probeImage(basePathFn(slug, file)).then(ok => ok ? file : null)
+  ));
+  return results.filter(Boolean);
+}
+
+const PROBE_BATCH = 8; /* aynı anda kaç sıra numarasının paralel denenceği */
+
+/* Numaralı klasörü (1.webp, 2.jpg, 05.png...) PROBE_BATCH'er PROBE_BATCH
+   paralel gruplar hâlinde tarar. Eskiden her numara ve her uzantı/dolgu adayı
+   tek tek, birbirini bekleyerek deneniyordu (numara başına onlarca sıralı
+   istek); artık bir grup numaranın tüm adayları aynı anda ağa gönderiliyor. */
+async function probeNumberedFolder(basePathFn, slug, maxIdx){
+  if(maxIdx === undefined) maxIdx = MAX_PROBE;
   const files = [];
-  if(NAMED_PIECES[slug]){
-    /* İsimli dosya listesi: sırayı koru, klasörde gerçekten var olanları al */
-    for(const file of NAMED_PIECES[slug]){
-      if(await probeImage(imgPath(slug, file))) files.push(file);
-    }
-  } else {
-    /* Numaralı klasör: dosyalar 1.webp, 2.jpg, 05.png... diye. Yol tamamen
-       numaradan bulunur. Klasör 0'dan da başlayabilsin ve baştaki birkaç
-       numara eksik olsa da (ör. 3.webp'ten başlıyorsa) bulabilsin diye
-       ilk görsele kadar daha toleranslı, bulduktan sonra normal tarıyoruz. */
-    let misses = 0;
-    let foundAny = false;
-    for(let i = 0; i <= MAX_PROBE; i++){
-      let found = null;
-      for(const file of candidateFiles(i)){
-        if(await probeImage(imgPath(slug, file))){ found = file; break; }
-      }
-      if(found){ files.push(found); misses = 0; foundAny = true; }
-      else {
-        if(i === 0) continue; // 0.webp yoksa sorun değil, 1'den devam
-        misses++;
-        // henüz hiç görsel bulunmadıysa baştaki boşluklara geniş tolerans
-        const limit = foundAny ? PROBE_GAP : 10;
-        if(misses > limit) break;
-      }
+  let i = 0;
+  let foundAny = false;
+  let missStreak = 0;
+  while(i <= maxIdx){
+    const batch = [];
+    for(let k = 0; k < PROBE_BATCH && i <= maxIdx; k++, i++) batch.push(i);
+    const results = await Promise.all(batch.map(idx=>{
+      const urls = candidateFiles(idx).map(f => basePathFn(slug, f));
+      return probeAny(urls).then(url => url ? url.substring(url.lastIndexOf('/')+1) : null);
+    }));
+    let hitsInBatch = 0;
+    results.forEach(file=>{ if(file){ files.push(file); hitsInBatch++; foundAny = true; } });
+    if(hitsInBatch > 0){
+      missStreak = 0;
+    } else {
+      missStreak += batch.length;
+      const limit = foundAny ? PROBE_GAP : 10;
+      if(missStreak > limit) break;
     }
   }
+  return files;
+}
+
+async function loadPieces(slug){
+  if(piecesCache[slug]) return piecesCache[slug];
+  const files = NAMED_PIECES[slug]
+    ? await probeNamedList(imgPath, slug, NAMED_PIECES[slug])
+    : await probeNumberedFolder(imgPath, slug);
 
   let descMap = {};
   try{
