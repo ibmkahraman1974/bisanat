@@ -1864,17 +1864,42 @@ async function probeNumberedFolder(basePathFn, slug, maxIdx){
   return files;
 }
 
+/* BAKED_OVERRIDES.pieces içinde bu slug için gömülü dosya adları varsa
+   onları döndürür (HTML'e zaten yazılı — probe/fetch gerektirmez).
+   Numaralı dosyalar sayısal, isimli dosyalar eklenme sırasına göre sıralanır. */
+function bakedFileList(slug){
+  const pieces = bakedSection('pieces');
+  const prefix = slug + '::';
+  const files = [];
+  Object.keys(pieces).forEach(key=>{
+    if(key.indexOf(prefix) === 0) files.push(key.slice(prefix.length));
+  });
+  if(!files.length) return null;
+  const num = f => parseInt(f, 10);
+  const allNumeric = files.every(f => /^\d+\.[a-z0-9]+$/i.test(f));
+  if(allNumeric) files.sort((a,b)=> num(a) - num(b));
+  return files;
+}
+
 async function loadPieces(slug){
   if(piecesCache[slug]) return piecesCache[slug];
-  const files = NAMED_PIECES[slug]
-    ? await probeNamedList(imgPath, slug, NAMED_PIECES[slug])
-    : await probeNumberedFolder(imgPath, slug);
 
-  let descMap = {};
-  try{
-    const dres = await fetch(imgPath(slug, 'aciklamalar.json'));
-    if(dres.ok) descMap = await dres.json();
-  }catch(err){ /* açıklama dosyası yoksa sorun değil, boş kalır */ }
+  /* Gömülü liste (BAKED) varsa: dosya adları HTML'de hazır — hiçbir ağ
+     doğrulaması yapmadan doğrudan kullan. Kapaklar anında gösterilir. */
+  const baked = bakedFileList(slug);
+  let files, descMap = {};
+  if(baked){
+    files = baked;
+  } else {
+    /* Gömülü liste yoksa (kullanıcı sonradan görsel eklediyse) eski yönteme dön. */
+    files = NAMED_PIECES[slug]
+      ? await probeNamedList(imgPath, slug, NAMED_PIECES[slug])
+      : await probeNumberedFolder(imgPath, slug);
+    try{
+      const dres = await fetch(imgPath(slug, 'aciklamalar.json'));
+      if(dres.ok) descMap = await dres.json();
+    }catch(err){ /* açıklama dosyası yoksa sorun değil, boş kalır */ }
+  }
 
   const pieceOverrides = loadPieceOverrides();
   const pieces = files.map(file => {
