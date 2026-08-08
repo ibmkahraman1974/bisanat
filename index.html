@@ -6,8 +6,7 @@
 <title>bisanat — Bülent & Şenay İşcan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Cormorant:ital,wght@0,600;1,500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<!-- Leaflet (harita) yalnızca iletişim bölümü ekrana gelince yüklenir; açılış hızını etkilemez. -->
 <!-- Açılışta ilk görünen görseller: tarayıcı hemen indirmeye başlasın -->
 <link rel="preload" as="image" href="assets/main/logo.webp" fetchpriority="high">
 <link rel="preload" as="image" href="assets/main/hero.webp" fetchpriority="high">
@@ -1113,22 +1112,41 @@ body.intro-lock{overflow:hidden}
      kendi sırası geldiğinde, bir sonraki geçişten hemen önce yüklenir.
      Böylece açılışta 5 ek görsel ilk ekranla yarışmaz. */
   let idx = 0;
-  setInterval(()=>{
+  let timer = null;
+  function step(){
     const next = (idx + 1) % layers.length;
     loadLayerBg(layers[next]); /* geçişten önce sadece bir sonrakini yükle */
     layers[idx].classList.remove('active');
     layers[next].classList.add('active');
     idx = next;
-  }, 6500);
+  }
+  function play(){ if(!timer) timer = setInterval(step, 6500); }
+  function pause(){ if(timer){ clearInterval(timer); timer = null; } }
+
+  /* Hero ekran dışındayken veya sekme arka plandayken döngüyü durdur:
+     gereksiz görsel indirmesi ve crossfade CPU kullanımı olmasın. */
+  const hero = layers[0].closest('.hero') || layers[0].parentElement;
+  if('IntersectionObserver' in window && hero){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=> e.isIntersecting ? play() : pause());
+    }, {threshold:0.01});
+    io.observe(hero);
+  } else {
+    play();
+  }
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden) pause();
+    else if(!hero || hero.getBoundingClientRect().bottom > 0) play();
+  });
 })();
 
 /* ============================================================
    SANATTA BİR YAKLAŞIM — hiperrealizm karşılaştırma kartları
    ------------------------------------------------------------
-   Her eserin görselleri assets/atolye/1/1.webp, 2.webp, 3.webp...
-   assets/atolye/2/..., ... assets/atolye/6/... şeklinde, eserin
-   HYPER_WORKS içindeki sırasına göre numaralı klasörlerden SIRAYLA
-   denenir (eserler galerisiyle aynı probe mantığı).
+   Her eserin görselleri assets/eserler/<slug>/ klasöründedir
+   (ör. assets/eserler/sanatta-yaklasim-1/). İsimli listesi olan
+   kartlar doğrudan bu listeden yüklenir; listesi olmayan numaralı
+   kartlar aynı klasörden 1.webp, 2.webp... diye taranır.
    1 numaralı görsel kapak fotoğrafı olarak kullanılır; DETAYLAR
    butonu, o çalışmaya ait tüm görselleri tam ekran ileri/geri
    gezinmeli olarak açar.
@@ -1240,9 +1258,12 @@ const NAMED_HYPER_IMAGES = {
 };
 
 async function loadHyperImages(slug){
+  /* İsimli liste varsa: dosya adları HTML'de hazır — ağ doğrulaması yapmadan
+     doğrudan kullan (kapak ve galeri anında gösterilir). */
   if(NAMED_HYPER_IMAGES[slug]){
-    return await probeNamedList(hyperImgPath, slug, NAMED_HYPER_IMAGES[slug]);
+    return NAMED_HYPER_IMAGES[slug].slice();
   }
+  /* Liste yoksa (numaralı klasör) eski deneme-yanılma taramasına dön. */
   return await probeNumberedFolder(hyperImgPath, slug, 60);
 }
 
@@ -1263,10 +1284,11 @@ async function renderHyperGrid(){
     grid.appendChild(card);
   });
 
-  HYPER_WORKS.forEach(async work=>{
+  async function loadHyperCover(work){
     const files = await loadHyperImages(work.slug);
     hyperImagesCache[work.slug] = files;
     const card = grid.children[HYPER_WORKS.indexOf(work)];
+    if(!card) return;
     const cover = card.querySelector('.cover');
     if(files.length){
       const img = document.createElement('img');
@@ -1277,7 +1299,23 @@ async function renderHyperGrid(){
       img.src = hyperImgPath(work.slug, files[0]);
       cover.appendChild(img);
     }
-  });
+  }
+
+  /* Kapağı (ve numaralı kartlarda probe taramasını) kart ekrana girince başlat;
+     açılışta ekran dışındaki kartlar için hiçbir ağ isteği yapılmaz. */
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries, obs)=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        const work = HYPER_WORKS[Array.prototype.indexOf.call(grid.children, entry.target)];
+        if(work) loadHyperCover(work);
+      });
+    }, {rootMargin:'300px'});
+    Array.prototype.forEach.call(grid.children, card=> io.observe(card));
+  } else {
+    HYPER_WORKS.forEach(loadHyperCover);
+  }
 }
 
 const hyperImagesCache = {};
@@ -2273,32 +2311,70 @@ renderHyperGrid();
   });
 })();
 
-/* ---------- İletişim haritaları (Leaflet + logo.webp işaretçi) ---------- */
+/* ---------- İletişim haritaları (Leaflet + logo.webp işaretçi) ----------
+   Leaflet kütüphanesi (CSS+JS) ve OpenStreetMap karoları açılışta DEĞİL,
+   yalnızca iletişim bölümü ekrana yaklaşınca yüklenir. Böylece ~150KB'lık
+   kütüphane ve onlarca karo isteği hero/galeri ile yarışmaz. */
 (function initContactMaps(){
-  if(typeof L === 'undefined') return; /* Leaflet yüklenemediyse sessizce geç */
-  const logoIcon = L.divIcon({
-    className:'',
-    html:'<div class="loc-marker-logo"><img src="assets/main/logo.webp" alt="bisanat"></div>',
-    iconSize:[44,44],
-    iconAnchor:[22,44],
-    popupAnchor:[0,-44]
-  });
-  const locations = [
-    { id:'map-istanbul', lat:40.971590, lng:29.116698, label:'Ataşehir Atölyesi' },
-    { id:'map-salgamli', lat:41.054490, lng:27.007420, label:'Şalgamlı Atölyesi' }
-  ];
-  locations.forEach(loc=>{
-    const el = document.getElementById(loc.id);
-    if(!el) return;
-    const map = L.map(loc.id, { scrollWheelZoom:false, attributionControl:true }).setView([loc.lat, loc.lng], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom:19,
-      attribution:'&copy; OpenStreetMap'
-    }).addTo(map);
-    L.marker([loc.lat, loc.lng], { icon:logoIcon }).addTo(map).bindPopup(loc.label);
-    /* bölüm görünür olduğunda boyutu düzelt (gizli iken açılırsa gri kalmasın) */
-    setTimeout(()=> map.invalidateSize(), 300);
-  });
+  const section = document.getElementById('iletisim');
+  if(!section) return;
+
+  let started = false;
+  function loadLeaflet(){
+    return new Promise((resolve, reject)=>{
+      if(typeof L !== 'undefined'){ resolve(); return; }
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(css);
+      const js = document.createElement('script');
+      js.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      js.onload = resolve;
+      js.onerror = reject;
+      document.head.appendChild(js);
+    });
+  }
+
+  function buildMaps(){
+    if(typeof L === 'undefined') return;
+    const logoIcon = L.divIcon({
+      className:'',
+      html:'<div class="loc-marker-logo"><img src="assets/main/logo.webp" alt="bisanat"></div>',
+      iconSize:[44,44],
+      iconAnchor:[22,44],
+      popupAnchor:[0,-44]
+    });
+    const locations = [
+      { id:'map-istanbul', lat:40.971590, lng:29.116698, label:'Ataşehir Atölyesi' },
+      { id:'map-salgamli', lat:41.054490, lng:27.007420, label:'Şalgamlı Atölyesi' }
+    ];
+    locations.forEach(loc=>{
+      const el = document.getElementById(loc.id);
+      if(!el) return;
+      const map = L.map(loc.id, { scrollWheelZoom:false, attributionControl:true }).setView([loc.lat, loc.lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom:19,
+        attribution:'&copy; OpenStreetMap'
+      }).addTo(map);
+      L.marker([loc.lat, loc.lng], { icon:logoIcon }).addTo(map).bindPopup(loc.label);
+      setTimeout(()=> map.invalidateSize(), 300);
+    });
+  }
+
+  function start(){
+    if(started) return;
+    started = true;
+    loadLeaflet().then(buildMaps).catch(()=>{ /* yüklenemezse harita alanı boş kalır */ });
+  }
+
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      if(entries.some(e=>e.isIntersecting)){ io.disconnect(); start(); }
+    }, {rootMargin:'400px'}); /* bölüme 400px kala hazırla */
+    io.observe(section);
+  } else {
+    start();
+  }
 })();
 
 /* Görsellere sağ klik ile indirmeyi / sürükleyerek kaydetmeyi engelle */
@@ -2473,7 +2549,7 @@ document.addEventListener('dragstart', e=>{
       const thumbId = `thumbHyper_${work.slug}`;
       box.innerHTML = `
         <div class="admin-field-head"><div class="admin-thumb" id="${thumbId}"></div>
-          <div class="admin-field-label">Kart ${work.slug} — assets/atolye/${work.slug}/</div></div>
+          <div class="admin-field-label">Kart ${work.slug} — assets/eserler/${work.slug}/</div></div>
         <label>Başlık</label>
         <input type="text" class="admin-input admin-title-input" data-slug="${work.slug}" value="${work.title.replace(/"/g,'&quot;')}">
         <label>Açıklama</label>
