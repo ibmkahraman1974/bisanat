@@ -1659,6 +1659,18 @@ function fileLabel(file){
 function clearCycles(){ cycleTimers.forEach(t=>clearInterval(t)); cycleTimers = []; }
 function findCat(slug){ return CATEGORIES.find(c=>c.slug===slug); }
 
+/* Elle açıklama girilmemiş görseller için: kategori adı + dosya adından
+   türetilen temiz etiketi birleştirerek kısa, otomatik bir bilgi metni
+   üretir. Örn. kategori "Milli Saraylar", dosya "Milli_Saraylar_Cuceler_1.webp"
+   -> "Milli Saraylar — Cuceler 1". Salt sayısal dosya adlarında (1.webp, 2.webp)
+   yalnızca kategori adı kullanılır. */
+function autoPieceDesc(catName, file){
+  const label = fileLabel(file);
+  if(!catName) return label;
+  if(/^\d+$/.test(label)) return catName;
+  return `${catName} — ${label}`;
+}
+
 /* ---------- Klasördeki görselleri sırayla deneyerek otomatik okuma ----------
    Manifest, PHP, build script vs. yok — tamamen bu HTML dosyasının içinde.
    Klasöre görselleri "1.jpg", "2.jpg", "3.webp"... diye SIRAYLA atmanız
@@ -1991,12 +2003,14 @@ async function loadPieces(slug){
   const files = bakedFileList(slug) || NAMED_PIECES[slug] || [];
 
   const pieceOverrides = loadPieceOverrides();
+  const cat = findCat(slug);
+  const catName = cat ? cat.name : '';
   const pieces = files.map(file => {
     const ov = pieceOverrides[`${slug}::${file}`];
     return {
       file,
       title: (ov && ov.title) ? ov.title : fileLabel(file),
-      desc:  (ov && ov.desc)  ? ov.desc  : ''
+      desc:  (ov && ov.desc)  ? ov.desc  : autoPieceDesc(catName, file)
     };
   });
   piecesCache[slug] = pieces;
