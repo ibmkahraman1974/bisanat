@@ -1659,85 +1659,16 @@ function fileLabel(file){
 function clearCycles(){ cycleTimers.forEach(t=>clearInterval(t)); cycleTimers = []; }
 function findCat(slug){ return CATEGORIES.find(c=>c.slug===slug); }
 
-/* Elle açıklama girilmemiş görseller için: dosya adından özneyi (heykel
-   konusu) ve varsa geçen müze/mekân adını ayrıştırıp "... Heykeli, ...
-   Müzesinde Sergilenmektedir." kalıbında kısa bir açıklama üretir.
-   Dosya adında müze bilgisi yoksa, kategori kendisi bir müze/sergi alanı
-   niteliğindeyse kategori adı mekân olarak kullanılır.
-   NOT: Bu, dosya adından otomatik türetilen bir TAHMİNDİR — dosya adı
-   yetersiz/belirsizse cümle de yetersiz kalabilir. Kesin/doğru bir metin
-   gerekiyorsa Yönetim Panelinden (Galeri Görselleri sekmesi) ilgili
-   görselin açıklamasını elle girmeniz, otomatik metnin önüne geçer. */
-const MUSEUM_LIKE_CATEGORIES = new Set([
-  'milli-saraylar','arkeoloji','etnografya','deniz-muzesi',
-  'tarihi-alan','ozel-muzeler','yurtdisi'
-]);
-
-function titleCaseTr(str){
-  return str.split(' ').filter(Boolean).map(w=>{
-    if(/^\d+$/.test(w)) return w;
-    const lower = w.toLocaleLowerCase('tr');
-    return lower.charAt(0).toLocaleUpperCase('tr') + lower.slice(1);
-  }).join(' ');
-}
-/* "MilliSaraylar" gibi bitişik yazılmış dosya adlarını kelimelere ayırır */
-function splitCamel(str){
-  return str.replace(/([a-zçğıöşü0-9])([A-ZÇĞİÖŞÜ])/g, '$1 $2');
-}
-/* ASCII dosya adlarında sık kaybolan Türkçe noktalı harfi düzeltir: muze -> müze */
-function fixMuze(str){ return str.replace(/([Mm])uze/g, '$1üze'); }
-
-function autoPieceDesc(catName, slug, file){
-  const rawLabel = splitCamel(fileLabel(file)).replace(/\s+/g, ' ').trim();
-  const words = rawLabel.split(' ').filter(Boolean);
-
-  /* Dosya adında "müze/muze" geçen bir kelime varsa, ondan önceki en
-     fazla 3 kelimeyle birleştirip olası mekân adını ayırıyoruz; kalan
-     kelimeler özneyi (heykel konusunu) oluşturuyor. */
-  const muzIdx = words.findIndex(w => /m[uü]z/i.test(w));
-  let venueWords = [], subjectWords = words.slice();
-  if(muzIdx !== -1){
-    const start = Math.max(0, muzIdx - 3);
-    venueWords = words.slice(start, muzIdx + 1);
-    subjectWords = words.slice(0, start).concat(words.slice(muzIdx + 1));
-  }
-  subjectWords = subjectWords.filter(w => !/^\d+$/.test(w)); /* sondaki sıra numarasını at */
-
-  /* Özne, kategori adıyla başlıyorsa (dosya adı kategori önekiyle başlamışsa)
-     bu tekrarı temizle: "Milli Saraylar Cuceler" -> "Cuceler" */
-  const catWords = catName.toLocaleLowerCase('tr').split(/\s+/);
-  while(subjectWords.length && catWords.includes(subjectWords[0].toLocaleLowerCase('tr'))){
-    subjectWords.shift();
-  }
-
-  let venue = venueWords.length ? titleCaseTr(venueWords.join(' ')) : null;
-  if(venue){
-    if(!/m[uü]zesi$/i.test(venue)) venue = venue.replace(/m[uü]zes?i?$/i, 'Müzesi');
-    venue = fixMuze(venue);
-  }
-
-  const alreadyHasHeykel = subjectWords.some(w => /heykel/i.test(w));
-  let subject;
-  if(slug === 'ataturk'){
-    subject = "Ulu Önder Gazi Mustafa Kemal Atatürk'ün Heykeli";
-  } else if(slug === 'film-tv'){
-    subject = subjectWords.length ? `${titleCaseTr(subjectWords.join(' '))} Çalışması` : `${catName} Çalışması`;
-  } else if(!subjectWords.length){
-    subject = `${catName} Heykeli`;
-  } else {
-    subject = titleCaseTr(subjectWords.join(' ')) + (alreadyHasHeykel ? '' : ' Heykeli');
-  }
-
-  if(slug === 'film-tv'){
-    return venue ? `${subject}, ${venue} çekimlerinde kullanılmıştır.` : `${subject}, bisanat atölyesi tarafından hazırlanmıştır.`;
-  }
-  if(venue){
-    return `${subject}, ${venue}'nde sergilenmektedir.`;
-  }
-  if(MUSEUM_LIKE_CATEGORIES.has(slug)){
-    return `${subject}, ${catName} kapsamında sergilenmektedir.`;
-  }
-  return `${subject}, bisanat atölyesi eserlerindendir.`;
+/* Elle açıklama girilmemiş görseller için: kategori adı + dosya adından
+   türetilen temiz etiketi birleştirerek kısa, otomatik bir bilgi metni
+   üretir. Örn. kategori "Milli Saraylar", dosya "Milli_Saraylar_Cuceler_1.webp"
+   -> "Milli Saraylar — Cuceler 1". Salt sayısal dosya adlarında (1.webp, 2.webp)
+   yalnızca kategori adı kullanılır. */
+function autoPieceDesc(catName, file){
+  const label = fileLabel(file);
+  if(!catName) return label;
+  if(/^\d+$/.test(label)) return catName;
+  return `${catName} — ${label}`;
 }
 
 /* ---------- Klasördeki görselleri sırayla deneyerek otomatik okuma ----------
@@ -2079,7 +2010,7 @@ async function loadPieces(slug){
     return {
       file,
       title: (ov && ov.title) ? ov.title : fileLabel(file),
-      desc:  (ov && ov.desc)  ? ov.desc  : autoPieceDesc(catName, slug, file)
+      desc:  (ov && ov.desc)  ? ov.desc  : autoPieceDesc(catName, file)
     };
   });
   piecesCache[slug] = pieces;
