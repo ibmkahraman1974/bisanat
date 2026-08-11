@@ -216,7 +216,7 @@
       inset 3px 0 5px -3px rgba(255,255,255,.35),
       inset -3px 0 5px -3px rgba(45,30,8,.4);}
   .piece .img-wrap .img-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
-    filter:saturate(1.05) contrast(1.02);opacity:0;transition:opacity 1.05s ease}
+    filter:saturate(1.05) contrast(1.02);opacity:0;transition:opacity 2.8s ease-in-out}
   .piece .img-wrap .img-layer.active{opacity:1;z-index:1}
   /* Görsel bulunamadığında gösterilecek zarif yer tutucu — kırık resim ikonu yerine */
   .img-fallback{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;
@@ -2120,16 +2120,32 @@ async function renderAll(){
         const p = pieces[idx];
         const incoming = showingA ? layerB : layerA;
         const outgoing = showingA ? layerA : layerB;
-        incoming.onerror = ()=> wrapEl.classList.add('broken');
-        incoming.onload  = ()=> wrapEl.classList.remove('broken');
-        incoming.src = imgPath(cat.slug, p.file);
-        incoming.alt = p.title;
-        incoming.classList.add('active');
-        outgoing.classList.remove('active');
-        titleEl.textContent = p.title;
-        descEl.textContent  = p.desc || '';
-        showingA = !showingA;
-      }, 3600 + ci*180); /* kartlar arasında hafif faz farkı */
+        const nextSrc = imgPath(cat.slug, p.file);
+        const swap = ()=>{
+          incoming.onerror = ()=> wrapEl.classList.add('broken');
+          incoming.onload  = ()=> wrapEl.classList.remove('broken');
+          incoming.src = nextSrc;
+          incoming.alt = p.title;
+          /* Bir sonraki kare tamamen tarayıcı belleğine alındıktan sonra
+             ikisini AYNI ANDA değiştiriyoruz: giden görsel solurken gelen
+             görsel üstüne biner (crossfade) — araya boşluk/kesinti girmez. */
+          requestAnimationFrame(()=>{
+            incoming.classList.add('active');
+            outgoing.classList.remove('active');
+          });
+          titleEl.textContent = p.title;
+          descEl.textContent  = p.desc || '';
+          showingA = !showingA;
+        };
+        /* Görseli önceden (arka planda) tamamen yükleyip decode ederek,
+           geçiş başladığında gelen kare zaten hazır olsun — böylece
+           "önce silinip sonra beliren" değil, iki görselin üst üste
+           bindiği yumuşak bir geçiş hissi oluşur. */
+        const preloader = new Image();
+        preloader.onload  = swap;
+        preloader.onerror = swap; /* yüklenemese bile akışı kilitleme */
+        preloader.src = nextSrc;
+      }, 7000 + ci*220); /* kartlar arasında hafif faz farkı */
       cycleTimers.push(timer);
     }
   }
