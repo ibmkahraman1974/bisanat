@@ -768,7 +768,7 @@ body.intro-lock{overflow:hidden}
 <div class="about-modal-overlay" id="hakkindaModal">
   <div class="about-modal-panel">
     <button type="button" class="about-modal-close" id="hakkindaClose" aria-label="Kapat">&times;</button>
-    <div class="section-head"><div class="eyebrow">Atölyenin ruhu</div><h2>Hakkında</h2></div>
+    <div class="section-head"><h2>Hakkında</h2></div>
   <div class="about-united">
 
     <div class="about-person-name">Bülent İşcan</div>
@@ -791,16 +791,13 @@ body.intro-lock{overflow:hidden}
     </div>
     <div class="bio-more-wrap"><button type="button" class="bio-more" data-target="senayBioWrap">Devamını oku<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
 
-    <div style="max-width:360px;margin:36px auto 0">
-      <div class="compare" id="hakkindaAtolyeCard">
-        <div class="cover"><img src="assets/sanatta-yaklasim-1/Atolye-1.webp" alt="Her Bir Hikayenin Can Bulduğu Atölyemiz" loading="lazy" decoding="async" onerror="this.remove()"></div>
-        <div class="meta">
-          <div class="eyebrow-sm">Sanatta Bir Yaklaşım Atölyesi</div>
-          <h4>Her Bir Hikayenin Can Bulduğu Atölyemiz</h4>
-          <p class="desc">Bu eserlerin hazırlanmasında kullandığımız atölyemiz, her bir hikâyenin doğduğu, emeğin sabırla sanata dönüştüğü merkezdir.</p>
-          <button class="detay-btn" type="button" onclick="openHyperLightbox('sanatta-yaklasim-1')">DETAYLAR</button>
-        </div>
+    <div style="max-width:760px;margin:36px auto 0">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px" id="hakkindaAtolyeCard">
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:var(--card)"><img src="assets/sanatta-yaklasim-1/Atolye-1.webp" alt="Her Bir Hikayenin Can Bulduğu Atölyemiz" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.remove()"></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:var(--card)"><img src="assets/sanatta-yaklasim-1/Atolye-2.webp" alt="Her Bir Hikayenin Can Bulduğu Atölyemiz" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.remove()"></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:var(--card)"><img src="assets/sanatta-yaklasim-1/Atolye-3.webp" alt="Her Bir Hikayenin Can Bulduğu Atölyemiz" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.parentElement.remove()"></div>
       </div>
+      <div style="text-align:center;margin-top:14px;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--cream)">Atölyemiz</div>
     </div>
 
     <div class="about-roles">
