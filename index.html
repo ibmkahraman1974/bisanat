@@ -50,7 +50,7 @@
     min-height:560px;}
   .hero-bg{position:absolute;inset:0;z-index:0}
   .hero-bg-layer{position:absolute;inset:0;background-position:center 30%;background-size:cover;background-repeat:no-repeat;
-    opacity:0;transition:opacity 1.8s ease}
+    opacity:0;transition:opacity 2s ease}
   .hero-bg-layer.active{opacity:1}
   .hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
     background:linear-gradient(180deg, rgba(22,16,9,.55) 0%, rgba(22,16,9,.72) 55%, rgba(247,242,231,1) 100%);}
@@ -833,6 +833,7 @@ body.intro-lock{overflow:hidden}
     <div class="hero-bg-layer" data-bg="assets/main/hero-3.webp"></div>
     <div class="hero-bg-layer" data-bg="assets/main/hero-4.webp"></div>
     <div class="hero-bg-layer" data-bg="assets/main/hero-5.webp"></div>
+    <div class="hero-bg-layer" data-bg="assets/main/hero-6.webp"></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-inner">
@@ -1258,7 +1259,7 @@ body.intro-lock{overflow:hidden}
    HERO ARKAPLAN GEÇİŞİ
    ------------------------------------------------------------
    hero.webp, hero-1.webp, hero-2.webp, hero-3.webp, hero-4.webp,
-   hero-5.webp arasında sırayla, önce mevcut görsel tamamen
+   hero-5.webp, hero-6.webp arasında sırayla, önce mevcut görsel tamamen
    silinerek kaybolur, sonra bir sonraki görsel belirir (iki
    görselin üst üste binip parlamasını önlemek için).
 ============================================================ */
@@ -1279,25 +1280,22 @@ body.intro-lock{overflow:hidden}
      Böylece açılışta 5 ek görsel ilk ekranla yarışmaz. */
   let idx = 0;
   let timer = null;
-  let fadeTimeout = null;
-  const FADE_MS = 1800;  /* silme/belirme geçiş süresi */
+  const FADE_MS = 2000;  /* bindirmeli geçiş süresi (CSS ile eşleşmeli) */
   const HOLD_MS = 6200;  /* bir görselin ekranda kalma süresi */
   function step(){
     const next = (idx + 1) % layers.length;
     loadLayerBg(layers[next]); /* geçişten önce sadece bir sonrakini yükle */
-    /* 1) Mevcut görsel önce tamamen silinerek kaybolur */
+    /* Bindirmeli geçiş: yeni görsel üstte belirmeye başlarken eski görsel
+       aynı anda alttan kaybolur — asla boş/kararmış bir kare görünmez. */
+    layers[next].style.zIndex = 2;   /* beliren görsel üstte */
+    layers[idx].style.zIndex = 1;    /* kaybolan görsel altta */
+    layers[next].classList.add('active');
     layers[idx].classList.remove('active');
-    /* 2) Silme tamamlandıktan sonra bir sonraki görsel belirir — iki
-          görsel asla aynı anda görünür olmaz, bu yüzden "parlama" olmaz */
-    fadeTimeout = setTimeout(()=>{
-      layers[next].classList.add('active');
-      idx = next;
-    }, FADE_MS);
+    idx = next;
   }
   function play(){ if(!timer) timer = setInterval(step, HOLD_MS); }
   function pause(){
     if(timer){ clearInterval(timer); timer = null; }
-    if(fadeTimeout){ clearTimeout(fadeTimeout); fadeTimeout = null; }
   }
 
   /* Hero ekran dışındayken veya sekme arka plandayken döngüyü durdur:
