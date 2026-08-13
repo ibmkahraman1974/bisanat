@@ -111,6 +111,22 @@
   .about-roles b{display:block;font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--cream)}
   .about-roles span{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
 
+  /* Hakkında modal */
+  .about-modal-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(20,15,8,.72);
+    backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);padding:70px 20px;overflow-y:auto}
+  .about-modal-overlay.open{display:block}
+  .about-modal-panel{position:relative;max-width:1040px;margin:0 auto;background:var(--card);
+    border:1px solid rgba(138,106,44,.35);border-radius:16px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);
+    padding:56px 48px 60px}
+  .about-modal-close{position:absolute;top:18px;right:18px;width:42px;height:42px;border-radius:50%;
+    border:1px solid rgba(138,106,44,.4);background:var(--bg-0);color:var(--cream);font-size:20px;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s}
+  .about-modal-close:hover{background:var(--gold-1);color:#fff;border-color:var(--gold-1)}
+  @media(max-width:700px){
+    .about-modal-overlay{padding:60px 0 0}
+    .about-modal-panel{border-radius:16px 16px 0 0;padding:44px 22px 50px;min-height:100%}
+  }
+
   .stats-strip{position:relative;z-index:2;display:flex;justify-content:center;gap:0;flex-wrap:wrap;max-width:800px;margin:48px auto 0;border-top:1px solid rgba(138,106,44,.25);padding-top:32px}
   .stat{flex:1;min-width:140px;text-align:center;padding:0 20px;border-left:1px solid rgba(138,106,44,.2)}
   .stat:first-child{border-left:none}
@@ -268,8 +284,17 @@
       inset -4px 0 8px -4px rgba(45,30,8,.4);}
   .cat-intro::before{display:none}
   .cat-intro::after{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.5);border-radius:4px;pointer-events:none}
-  .cat-intro h3{text-align:center;text-transform:uppercase;letter-spacing:2px;font-size:26px}
-  .cat-intro-btn{display:block!important;width:max-content;margin:28px auto 0!important;border:none;cursor:pointer;font-family:'Montserrat',sans-serif}
+  .cat-intro-head{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;margin-bottom:20px}
+  .cat-intro h3{text-align:center;text-transform:uppercase;letter-spacing:2px;font-size:26px;margin:0;order:2}
+  .cat-intro-btn{display:inline-flex!important;align-items:center;justify-content:center;width:max-content;flex-shrink:0;margin:0!important;border:none;cursor:pointer;font-family:'Montserrat',sans-serif;order:1}
+  @media(max-width:640px){
+    .cat-intro-btn{width:100%}
+  }
+
+  /* Kategori tam galerisi: 3 sütunlu kart ızgarası */
+  .grid.category-view{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:900px){.grid.category-view{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.grid.category-view{grid-template-columns:1fr}}
 
 
   /* Eserler — kategori kartları (Tümü görünümü) & alt galeri */
@@ -706,7 +731,7 @@ body.intro-lock{overflow:hidden}
     <span></span><span></span><span></span>
   </button>
   <nav id="mainNav">
-    <a href="#anasayfa">Anasayfa</a><a href="#hakkinda">Hakkında</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
+    <a href="#anasayfa">Anasayfa</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
     <a href="#eserler">Eserler</a><a href="#yurtdisi">Yurtdışı</a><a href="#arsiv">Arşiv</a><a href="#iletisim">İletişim</a>
   </nav>
 </header>
@@ -740,8 +765,10 @@ body.intro-lock{overflow:hidden}
 </div>
 
 
-<section id="hakkinda">
-  <div class="section-head"><div class="eyebrow">Atölyenin ruhu</div><h2>Hakkında</h2></div>
+<div class="about-modal-overlay" id="hakkindaModal">
+  <div class="about-modal-panel">
+    <button type="button" class="about-modal-close" id="hakkindaClose" aria-label="Kapat">&times;</button>
+    <div class="section-head"><div class="eyebrow">Atölyenin ruhu</div><h2>Hakkında</h2></div>
   <div class="about-united">
 
     <div class="about-person-name">Bülent İşcan</div>
@@ -767,7 +794,8 @@ body.intro-lock{overflow:hidden}
       <div><div class="person-photo"><img src="assets/main/senay-iscan.webp" alt="Şenay İşcan" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.querySelector('span').style.display='flex'"><span style="display:none">Şenay İşcan<br>2:3 portre</span></div><b>Şenay İşcan</b><span>Sanat Yönetmeni · Yaratıcı Tasarımcı</span></div>
     </div>
   </div>
-</section>
+  </div>
+</div>
 
 <section id="hiperrealizm" class="section-alt">
   <div class="section-head"><div class="eyebrow">Sanatta bir yaklaşım</div><h2>Gerçek mi, heykel mi?</h2></div>
@@ -794,9 +822,11 @@ body.intro-lock{overflow:hidden}
   </div>
   <div class="cat-active-label" id="catActiveLabel" style="display:none"></div>
   <div class="hyper-card cat-intro" id="catIntro" style="display:none">
-    <h3 id="catIntroTitle"></h3>
+    <div class="cat-intro-head">
+      <h3 id="catIntroTitle"></h3>
+      <button class="wa-btn cat-intro-btn" id="catIntroBtn">Görselleri Gör</button>
+    </div>
     <div id="catIntroBody"></div>
-    <button class="wa-btn cat-intro-btn" id="catIntroBtn">Görselleri Gör</button>
   </div>
   <div class="grid" id="eserGrid"></div>
   <a class="more-link" id="moreLink" href="#arsiv">Tüm arşivi gör →</a>
@@ -1649,18 +1679,7 @@ const catIntroBody  = document.getElementById('catIntroBody');
 const catIntroBtn   = document.getElementById('catIntroBtn');
 catIntroBtn.addEventListener('click', async ()=>{
   catIntro.style.display = 'none';
-  /* 3'lü grid yerine doğrudan gezinme galerisi (lightbox) aç */
-  const slug = currentSlug;
-  grid.innerHTML = ''; /* grid boş kalsın ki kapanınca intro'ya dönülsün */
-  catNav.style.display = 'none';
-  const pieces = await loadPieces(slug);
-  if(currentSlug !== slug) return;
-  currentCatPieces = pieces;
-  if(!pieces.length){
-    grid.innerHTML = '<div class="empty-note">Bu kategoride henüz görsel eklenmedi.</div>';
-    return;
-  }
-  openLightbox(slug, 0);
+  await loadCategoryGallery(currentSlug);
 });
 moreLink.addEventListener('click', e=>{
   if(currentSlug === 'all'){
@@ -2317,41 +2336,23 @@ function pieceCardHTML(cat, p, i){
       </div>`;
 }
 
-const CATEGORY_PAGE_SIZE = 3;
-let categoryStart = 0;
 let currentCatPieces = [];
 
-function renderCategoryPage(slug, startIndex){
+/* Kategorinin TÜM görsellerini 3 sütunlu kart ızgarasında render eder
+   (sayfalama yok — hepsi aynı anda listelenir) */
+function renderFullGallery(slug, pieces){
   const cat = findCat(slug);
   if(!cat) return;
-  const pieces = currentCatPieces;
-  categoryStart = startIndex;
   grid.innerHTML = '';
-  const end = Math.min(startIndex + CATEGORY_PAGE_SIZE, pieces.length);
-  for(let i = startIndex; i < end; i++){
-    const p = pieces[i];
+  pieces.forEach((p, i)=>{
     const card = document.createElement('div');
     card.className = 'piece';
     card.innerHTML = pieceCardHTML(cat, p, i);
     card.addEventListener('click', ()=> openLightbox(slug, i));
     grid.appendChild(card);
-  }
-  catNav.style.display = pieces.length > 0 ? 'flex' : 'none';
-  catNavCount.textContent = pieces.length ? `${startIndex+1}–${end} / ${pieces.length}` : '';
-  catPrev.disabled = startIndex <= 0;
-  catNext.disabled = end >= pieces.length;
+  });
+  catNav.style.display = 'none';
 }
-
-catPrev.addEventListener('click', ()=>{
-  if(currentSlug === 'all') return;
-  renderCategoryPage(currentSlug, Math.max(0, categoryStart - CATEGORY_PAGE_SIZE));
-});
-catNext.addEventListener('click', ()=>{
-  if(currentSlug === 'all') return;
-  if(categoryStart + CATEGORY_PAGE_SIZE < currentCatPieces.length){
-    renderCategoryPage(currentSlug, categoryStart + CATEGORY_PAGE_SIZE);
-  }
-});
 
 async function renderCategory(slug){
   clearCycles();
@@ -2384,7 +2385,7 @@ async function loadCategoryGallery(slug){
     catNav.style.display = 'none';
     return;
   }
-  renderCategoryPage(slug, 0);
+  renderFullGallery(slug, pieces);
 }
 
 /* ---------- Tam ekran slayt gösterisi ---------- */
@@ -2487,6 +2488,34 @@ renderHyperGrid();
         btn.childNodes[0].nodeValue = 'Devamını oku';
       }
     });
+  });
+})();
+
+/* ---------- Hakkında modalı ---------- */
+(function initAboutModal(){
+  const link    = document.getElementById('navHakkinda');
+  const overlay = document.getElementById('hakkindaModal');
+  const closeBtn= document.getElementById('hakkindaClose');
+  if(!link || !overlay || !closeBtn) return;
+  function openModal(){
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+    overlay.scrollTop = 0;
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  link.addEventListener('click', (e)=>{
+    e.preventDefault();
+    openModal();
+  });
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e)=>{
+    if(e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
   });
 })();
 
