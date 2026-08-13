@@ -731,8 +731,8 @@ body.intro-lock{overflow:hidden}
     <span></span><span></span><span></span>
   </button>
   <nav id="mainNav">
-    <a href="#anasayfa">Anasayfa</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
-    <a href="#eserler">Eserler</a><a href="#yurtdisi">Yurtdışı</a><a href="#arsiv">Arşiv</a><a href="#iletisim">İletişim</a>
+    <a href="#anasayfa">Anasayfa</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
+    <a href="#eserler">Eserler</a><a href="#yurtdisi">Yurtdışı</a><a href="#arsiv">Arşiv</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#iletisim">İletişim</a>
   </nav>
 </header>
 
@@ -783,12 +783,26 @@ body.intro-lock{overflow:hidden}
 
     <div class="about-person-name" style="margin-top:48px">Şenay İşcan</div>
     <div id="senayBioWrap" class="bio-collapse collapsed">
-    <p>Şenay İşcan, sanat yönetmeni ve yaratıcı tasarımcıdır. Tarihsel araştırmayı estetik bir bakış açısıyla buluşturarak projelerin yaratıcı dünyasını şekillendirir; konsept ve eskiz tasarımından kostüm, aksesuar ve heykel üretimine kadar atölyenin sanatsal süreçlerine yön verir.</p>
-    <p>Farklı disiplinlerden sanatçı ve zanaatkârlarla birlikte çalışarak, ortak bir yaratıcı vizyonun özgün eserlere dönüşmesini sağlar. Sinema alanındaki deneyimini yaratıcılığı ve üretim gücüyle birleştirerek çalışmalarına özgün ve güçlü bir görsel kimlik kazandırır.</p>
+    <p>Şenay İşcan, sanat yönetmeni ve yaratıcı tasarımcıdır.</p>
+    <p>Tarihsel araştırmayı estetik bir bakış açısıyla buluşturarak projelerin yaratıcı dünyasını şekillendirir. Konsept ve eskiz tasarımından kostüm, aksesuar ve heykel üretimine kadar uzanan sanatsal süreçlere yön verir.</p>
+    <p>Farklı disiplinlerden sanatçı ve zanaatkârlarla birlikte çalışarak ortak bir yaratıcı vizyonun nitelikli eserlere dönüşmesini sağlar.</p>
+    <p>Sinema alanındaki deneyimini sanatsal bakış açısı ve üretim gücüyle birleştirerek çalışmalarına özgün, güçlü ve zamansız bir görsel kimlik kazandırır.</p>
+    <p>İktisat Fakültesi lisans eğitiminin yanı sıra Halkla İlişkiler ile Radyo ve Televizyon Programcılığı alanlarında ön lisans eğitimlerini tamamlamış; sanatsal birikimini resim, heykel ve sanat tarihi alanlarında aldığı özel eğitimlerle geliştirmiştir.</p>
     </div>
     <div class="bio-more-wrap"><button type="button" class="bio-more" data-target="senayBioWrap">Devamını oku<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button></div>
 
-    <p class="about-pull" id="aboutPull">"Bülent elindeki malzemeye can verir, Şenay o canı dünyaya taşır."</p>
+    <div style="max-width:360px;margin:36px auto 0">
+      <div class="compare" id="hakkindaAtolyeCard">
+        <div class="cover"><img src="assets/sanatta-yaklasim-1/Atolye-1.webp" alt="Her Bir Hikayenin Can Bulduğu Atölyemiz" loading="lazy" decoding="async" onerror="this.remove()"></div>
+        <div class="meta">
+          <div class="eyebrow-sm">Sanatta Bir Yaklaşım Atölyesi</div>
+          <h4>Her Bir Hikayenin Can Bulduğu Atölyemiz</h4>
+          <p class="desc">Bu eserlerin hazırlanmasında kullandığımız atölyemiz, her bir hikâyenin doğduğu, emeğin sabırla sanata dönüştüğü merkezdir.</p>
+          <button class="detay-btn" type="button" onclick="openHyperLightbox('sanatta-yaklasim-1')">DETAYLAR</button>
+        </div>
+      </div>
+    </div>
+
     <div class="about-roles">
       <div><div class="person-photo"><img src="assets/main/bulent-iscan.webp" alt="Bülent İşcan" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.querySelector('span').style.display='flex'"><span style="display:none">Bülent İşcan<br>2:3 portre</span></div><b>Bülent İşcan</b><span>Heykeltraş · Ressam</span></div>
       <div><div class="person-photo"><img src="assets/main/senay-iscan.webp" alt="Şenay İşcan" loading="lazy" decoding="async" onerror="this.style.display='none';this.parentElement.querySelector('span').style.display='flex'"><span style="display:none">Şenay İşcan<br>2:3 portre</span></div><b>Şenay İşcan</b><span>Sanat Yönetmeni · Yaratıcı Tasarımcı</span></div>
@@ -1614,7 +1628,6 @@ const PAGE_TEXT_FIELDS = [
     hint:'Paragraflar arasına boş satır bırakın.', thumb:'' },
   { key:'senayBio',        label:'Şenay İşcan — Biyografi',       el:'#senayBioWrap',       mode:'paragraphs',
     hint:'Paragraflar arasına boş satır bırakın.', thumb:'' },
-  { key:'aboutPull',       label:'Hakkında — Alıntı Cümlesi',     el:'#aboutPull',          mode:'text' },
   { key:'hyperCardTitle',  label:'Hiperrealizm Kartı — Başlık',   el:'#hyperCardTitle',     mode:'text' },
   { key:'hyperCardBody',   label:'Hiperrealizm Kartı — Metin',    el:'#hyperCardBodyWrap',  mode:'paragraphs',
     hint:'Paragraflar arasına boş satır bırakın. Vurgulu kelime için <em class="gold-text">...</em> kullanılabilir.' },
