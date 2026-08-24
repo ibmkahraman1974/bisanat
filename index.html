@@ -1864,6 +1864,20 @@ moreLink.addEventListener('click', e=>{
 });
 
 function imgPath(slug, file){ return `${ASSET_BASE}${slug}/${file}`; }
+/* Türkçe karakterli dosya adlarında NFC/NFD normalizasyon farkı yüzünden
+   404 olan görseller için otomatik yeniden deneme. */
+function imgFallback(el, slug, file){
+  const step = el.dataset.fbStep || '0';
+  if(step === '0'){
+    el.dataset.fbStep = '1';
+    el.src = imgPath(slug, file.normalize('NFD'));
+  } else if(step === '1'){
+    el.dataset.fbStep = '2';
+    el.src = imgPath(slug, file.normalize('NFC'));
+  } else {
+    el.closest('.img-box')?.classList.add('broken');
+  }
+}
 
 /* Görsel dosya adından kart başlığı üret: uzantıyı at, tire/alt çizgiyi boşluğa çevir */
 function fileLabel(file){
@@ -2033,10 +2047,10 @@ const NAMED_PIECES = {
     'Topkapi_Sarayi_Ogrenci_ve_Hoca2.webp',
     'Topkapi_Sarayi_Ogrenci_ve_Hoca3.webp',
     'Topkapi_Sarayi_Ogrenci_ve_Hoca4.webp',
-    'Topkapı_Sarayı_Saatçi_1.webp',
-    'Topkapı_Sarayı_Saatçi_2.webp',
-    'Topkapı_Sarayı_Saatçi_3.webp',
-    'Topkapı_Sarayı_Saatçi_4.webp',
+    'Topkapi_Sarayi_Saatci_1.webp',
+    'Topkapi_Sarayi_Saatci_2.webp',
+    'Topkapi_Sarayi_Saatci_3.webp',
+    'Topkapi_Sarayi_Saatci_4.webp',
     'Abduulmecid_Efendi_Milli_Saraylar_Resim_Heykel_Muzesi.webp'
   ],
   'yurtdisi': [
@@ -2242,11 +2256,18 @@ function bakedFileList(slug){
 async function loadPieces(slug){
   if(piecesCache[slug]) return piecesCache[slug];
 
-  /* Dosya listesi yalnızca iki elle-yazılmış kaynaktan gelir: önce
-     BAKED_OVERRIDES.pieces (admin panelinden "Dışa Aktar" ile üretilip
-     koda gömülmüş liste), o da yoksa NAMED_PIECES. İkisinde de yoksa
-     o kategori için hiçbir görsel gösterilmez — otomatik tarama yok. */
-  const files = bakedFileList(slug) || NAMED_PIECES[slug] || [];
+  /* Dosya listesi iki elle-yazılmış kaynaktan gelir: BAKED_OVERRIDES.pieces
+     (admin panelinden "Dışa Aktar" ile üretilip koda gömülmüş liste) ve
+     NAMED_PIECES (koda doğrudan elle eklenen dosyalar). Bir kategori daha
+     önce dışa aktarılmış olsa bile, NAMED_PIECES'a sonradan eklenen yeni
+     dosyalar kaybolmasın diye ikisi birleştirilir (baked liste öne, sonra
+     baked'te olmayan named dosyalar eklenir). İkisi de boşsa o kategori
+     için hiçbir görsel gösterilmez — otomatik tarama yok. */
+  const baked = bakedFileList(slug) || [];
+  const named = NAMED_PIECES[slug] || [];
+  const files = baked.length
+    ? baked.concat(named.filter(f => !baked.includes(f)))
+    : named;
 
   const pieceOverrides = loadPieceOverrides();
   const cat = findCat(slug);
@@ -2457,7 +2478,7 @@ async function renderAll(){
 function pieceCardHTML(cat, p, i){
   return `<div class="shine"></div><div class="frame"></div>
       <div class="img-box">
-        <img src="${imgPath(cat.slug, p.file)}" alt="${p.title}" loading="lazy" decoding="async" onerror="this.closest('.img-box').classList.add('broken')">
+        <img src="${imgPath(cat.slug, p.file)}" alt="${p.title}" loading="lazy" decoding="async" onerror="imgFallback(this,'${cat.slug}','${p.file.replace(/'/g,"\\'")}')">
         <div class="img-fallback"><span class="fb-name">${cat.name}</span><span class="fb-sub">Görsel eklenmedi</span></div>
       </div>
       <div class="meta">
@@ -2558,7 +2579,13 @@ function updateLightbox(){
   const p = lbPieces[lbIndex];
   lbImg.classList.remove('broken');
   lbFallback.classList.remove('show');
-  lbImg.onerror = ()=>{ lbImg.classList.add('broken'); lbFbName.textContent = cat.name; lbFallback.classList.add('show'); };
+  lbImg.dataset.fbStep = '0';
+  lbImg.onerror = ()=>{
+    const step = lbImg.dataset.fbStep;
+    if(step === '0'){ lbImg.dataset.fbStep = '1'; lbImg.src = imgPath(cat.slug, p.file.normalize('NFD')); return; }
+    if(step === '1'){ lbImg.dataset.fbStep = '2'; lbImg.src = imgPath(cat.slug, p.file.normalize('NFC')); return; }
+    lbImg.classList.add('broken'); lbFbName.textContent = cat.name; lbFallback.classList.add('show');
+  };
   lbImg.onload  = ()=>{ lbImg.classList.remove('broken'); lbFallback.classList.remove('show'); };
   lbImg.src = imgPath(cat.slug, p.file);
   lbImg.alt = p.title;
