@@ -53,7 +53,7 @@
     opacity:0;transition:opacity 2s ease}
   .hero-bg-layer.active{opacity:1}
   .hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
-    background:linear-gradient(180deg, rgba(22,16,9,.55) 0%, rgba(22,16,9,.72) 55%, rgba(247,242,231,1) 100%);}
+    background:linear-gradient(180deg, rgba(22,16,9,.46) 0%, rgba(22,16,9,.63) 55%, rgba(247,242,231,1) 100%);}
   .hero svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;opacity:.85}
   .hero-inner{position:relative;z-index:2}
   .hero .eyebrow{color:var(--gold-1)}
@@ -848,7 +848,7 @@ body.intro-lock{overflow:hidden}
     <span></span><span></span><span></span>
   </button>
   <nav id="mainNav">
-    <a href="#anasayfa">Anasayfa</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
+    <a href="#anasayfa">Anasayfa</a><a href="#hiperrealizm">Sanatta Bir Yaklaşım</a>
     <a href="#eserler">Eserler</a><a href="#arsiv">Arşiv</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#iletisim">İletişim</a>
   </nav>
 </header>
@@ -1706,13 +1706,6 @@ hyperLightbox.addEventListener('touchend', e=>{
    içine de o slug için dosya listesini yazmanız gerekir.
 ============================================================ */
 const CATEGORIES = [
-  { slug:'ataturk',        name:'Mustafa Kemal Atatürk', intro:{
-      title:'Mustafa Kemal Atatürk',
-      paragraphs:[
-        'Mustafa Kemal Atatürk; üstün dehası, sarsılmaz liderliği ve eşsiz ileri görüşlülüğüyle tarihe yön vermiş büyük bir devlet adamıdır. Dahi bir stratejist ve benzersiz bir komutan olarak, bağımsızlık mücadelesini zafere taşıyarak milletine umut olmuş, Türk tarihinin en büyük kahramanlarından biri olarak adını ölümsüzleştirmiştir. Cesareti, kararlılığı ve çağdaş uygarlık hedefiyle yalnızca bir ulusu özgürlüğe kavuşturmakla kalmamış, gelecek nesillere ilham veren kalıcı bir miras bırakmıştır. Atatürk, fikirleri ve eserleriyle bugün de saygı, minnet ve hayranlıkla anılan büyük bir liderdir.',
-        'Dünya tarihinin en büyük devrimcilerinden Gazi Mustafa Kemal Atatürk\'e duyduğumuz sonsuz sevgi, saygı ve minnetle onu yaşatmaya çalışıyoruz. Atatürk üzerine çalışmak bizim için en büyük onur, ilham ve sorumluluktur; onun aziz hatırasını gelecek nesillere aktarmak ve unutturmamak en büyük idealimiz ve varlık sebebimizdir.'
-      ]
-  } },
   { slug:'milli-saraylar', name:'Milli Saraylar', intro:{
       title:'Milli Saraylar',
       paragraphs:[
@@ -1721,18 +1714,11 @@ const CATEGORIES = [
         'Bu çalışmalarımızın en değerli örneklerinden biri Topkapı Sarayı\'ndadır. 15. yüzyıldan 19. yüzyıla kadar Osmanlı İmparatorluğu\'nun yönetim merkezi olan ve bugün dünyanın en saygın müze-sarayları arasında yer alan bu eşsiz mekânda sergilenen heykellerimiz, tarihî mekânın ruhuna ve dönemin gerçekliğine uygun olarak bilimsel araştırmalar ve sanatsal titizlikle hazırlanmıştır. Bu köklü tarihî atmosferin bir parçası olmak, eserlerimizin en büyük gurur kaynaklarından biridir.'
       ]
   } },
-  { slug:'yurtdisi',       name:'Yurtdışı Çalışmaları', intro:{
-      title:'Yurtdışı Çalışmalarımız',
+  { slug:'tarihi-alan',    name:'Çanakkale Savaşları Tarihi Alan', intro:{
+      title:'Çanakkale Savaşları Tarihi Alan Çalışmaları',
       paragraphs:[
-        'Yurt dışındaki müzeler ve bilim merkezleri için, tarihe yön veren bilim insanlarını ve onların buluşlarını konu alan özel çalışmalar hazırlıyoruz. Bu isimleri en ince ayrıntısına kadar araştırarak gerçekçi heykellerle canlandırırken, icatlarını dönemine özgü dekorlar ve birebir ölçekte yeniden üretilmiş düzeneklerle ziyaretçilerin karşısına çıkarıyoruz.',
-        'Sergilenen her mekanizmayı, ilk tasarımına sadık kalarak — modern teknolojiye başvurmadan, dönemin malzeme ve yöntemleriyle — yeniden inşa ediyoruz. Amacımız yalnızca bir buluşu göstermek değil, o buluşun ardındaki emeği, dehayı ve dönemin ruhunu olduğu gibi yaşatmaktır. Bu anlayışla ürettiğimiz eserler, bugün dünyanın farklı ülkelerindeki müze ve bilim merkezlerinde sergilenmeye devam ediyor.'
-      ]
-  } },
-  { slug:'arkeoloji',      name:'Arkeoloji Müzeleri', intro:{
-      title:'Arkeoloji Müzeleri',
-      paragraphs:[
-        'Arkeoloji müzeleri, geçmiş uygarlıkların izlerini günümüze taşıyan eşsiz kültür hazineleridir. Binlerce yıllık eserleri koruyarak ziyaretçilere tarihin derinliklerinde unutulmaz bir yolculuk sunar. Her eser, insanlığın ortak mirasını anlatan sessiz bir tanık; her sergi ise geçmiş ile gelecek arasında kurulan değerli bir köprüdür.',
-        'Anadolu medeniyetleri, insanlık tarihine yön veren sayısız arkeolojik mirası günümüze ulaştırmıştır. Bu eşsiz eserler, dünya kültür mirasının en değerli hazineleri arasında yer alır. Arkeoloji müzelerindeki çalışmalarımızda, Anadolu\'nun zengin kültürel geçmişini ve atalarımızın yaşamını tarihsel doğrulukla yansıtan gerçekçi sahneler hazırlıyoruz. Amacımız, yazı öncesi ve yazı sonrası dönemleri ziyaretçilere etkileyici ve öğretici bir görsel deneyimle sunmaktır.'
+        'Çanakkale Tarihi Alanı, milletimizin bağımsızlık uğruna verdiği destansı mücadelenin, fedakârlığın ve kahramanlığın en güçlü simgelerinden biridir. Aynı zamanda savaşın acılarını ve barışın kıymetini gelecek nesillere anlatan evrensel bir hatıra mekânıdır.',
+        'Bu anlamlı tarihî alandaki çalışmalarımızda, Çanakkale kahramanlarını ve savaşın unutulmaz anlarını tarihsel doğruluk ve sanatsal titizlikle heykellerimizde yaşatıyoruz. Her eserimiz, aziz kahramanlarımızın hatırasını ölümsüzleştirmek, ziyaretçilere o ruhu hissettirmek ve Çanakkale destanını gelecek nesillere aktarmak amacıyla hazırlanmıştır.'
       ]
   } },
   { slug:'etnografya',     name:'Etnografya Müzeleri ve Kent Müzeleri', intro:{
@@ -1742,11 +1728,17 @@ const CATEGORIES = [
         'Bu müzelerdeki çalışmalarımızda, bu toprakların zengin kültürünü, geleneklerini, el sanatlarını, tarihî kişilikleri ve önemli yaşam sahnelerini gerçekçi heykeller ve canlandırmalarla yeniden kuruyoruz. Her çalışmamız, kültürel mirasımızın eşsiz zenginliğine duyduğumuz saygının ve onu gelecek nesillere aktarma sorumluluğumuzun bir yansımasıdır.'
       ]
   } },
-  { slug:'tarihi-alan',    name:'Çanakkale Savaşları Tarihi Alan', intro:{
-      title:'Çanakkale Savaşları Tarihi Alan Çalışmaları',
+  { slug:'arkeoloji',      name:'Arkeoloji Müzeleri', intro:{
+      title:'Arkeoloji Müzeleri',
       paragraphs:[
-        'Çanakkale Tarihi Alanı, milletimizin bağımsızlık uğruna verdiği destansı mücadelenin, fedakârlığın ve kahramanlığın en güçlü simgelerinden biridir. Aynı zamanda savaşın acılarını ve barışın kıymetini gelecek nesillere anlatan evrensel bir hatıra mekânıdır.',
-        'Bu anlamlı tarihî alandaki çalışmalarımızda, Çanakkale kahramanlarını ve savaşın unutulmaz anlarını tarihsel doğruluk ve sanatsal titizlikle heykellerimizde yaşatıyoruz. Her eserimiz, aziz kahramanlarımızın hatırasını ölümsüzleştirmek, ziyaretçilere o ruhu hissettirmek ve Çanakkale destanını gelecek nesillere aktarmak amacıyla hazırlanmıştır.'
+        'Arkeoloji müzeleri, geçmiş uygarlıkların izlerini günümüze taşıyan eşsiz kültür hazineleridir. Binlerce yıllık eserleri koruyarak ziyaretçilere tarihin derinliklerinde unutulmaz bir yolculuk sunar. Her eser, insanlığın ortak mirasını anlatan sessiz bir tanık; her sergi ise geçmiş ile gelecek arasında kurulan değerli bir köprüdür.',
+        'Anadolu medeniyetleri, insanlık tarihine yön veren sayısız arkeolojik mirası günümüze ulaştırmıştır. Bu eşsiz eserler, dünya kültür mirasının en değerli hazineleri arasında yer alır. Arkeoloji müzelerindeki çalışmalarımızda, Anadolu\'nun zengin kültürel geçmişini ve atalarımızın yaşamını tarihsel doğrulukla yansıtan gerçekçi sahneler hazırlıyoruz. Amacımız, yazı öncesi ve yazı sonrası dönemleri ziyaretçilere etkileyici ve öğretici bir görsel deneyimle sunmaktır.'
+      ]
+  } },
+  { slug:'portre',         name:'Portreler', intro:{
+      title:'Heykel Yüzleri',
+      paragraphs:[
+        'Her çizgide bir karakter, her ifadede bir hikâye. Bu bölümde, heykellerimizin yüz ifadelerini ve karakter detaylarını yakından inceleyebilirsiniz. Her portre; gerçekçi modelleme, sanatsal ustalık ve ince işçiliğin bir araya geldiği özgün bir eserdir.'
       ]
   } },
   { slug:'deniz-muzesi',   name:'Çanakkale Deniz Müzesi', intro:{
@@ -1763,16 +1755,24 @@ const CATEGORIES = [
         'Amacımız, yalnızca fiziksel benzerliği değil; kişinin karakterini ve ruhunu da sanatsal bir yorumla yaşatmaktır.'
       ]
   } },
-  { slug:'portre',         name:'Portreler', intro:{
-      title:'Heykel Yüzleri',
-      paragraphs:[
-        'Her çizgide bir karakter, her ifadede bir hikâye. Bu bölümde, heykellerimizin yüz ifadelerini ve karakter detaylarını yakından inceleyebilirsiniz. Her portre; gerçekçi modelleme, sanatsal ustalık ve ince işçiliğin bir araya geldiği özgün bir eserdir.'
-      ]
-  } },
   { slug:'tarih-oncesi',   name:'Tarih Öncesi İnsanlar', intro:{
       title:'Tarih Öncesi İnsanlar',
       paragraphs:[
         'Tarih öncesi çağlara ait çalışmalarımızda, insanlığın ilk yaşam izlerini bilimsel veriler ışığında gerçekçi sahnelerle canlandırıyoruz. Alanında uzman akademisyenler ve bilim insanlarıyla hazırlanan bu eserler, geçmişimizi tarihsel doğrulukla ziyaretçilere sunmaktadır. Her sahne, insanlığın köklü geçmişini keşfetmeye davet eden etkileyici bir zaman yolculuğudur.'
+      ]
+  } },
+  { slug:'ataturk',        name:'Mustafa Kemal Atatürk', intro:{
+      title:'Mustafa Kemal Atatürk',
+      paragraphs:[
+        'Mustafa Kemal Atatürk; üstün dehası, sarsılmaz liderliği ve eşsiz ileri görüşlülüğüyle tarihe yön vermiş büyük bir devlet adamıdır. Dahi bir stratejist ve benzersiz bir komutan olarak, bağımsızlık mücadelesini zafere taşıyarak milletine umut olmuş, Türk tarihinin en büyük kahramanlarından biri olarak adını ölümsüzleştirmiştir. Cesareti, kararlılığı ve çağdaş uygarlık hedefiyle yalnızca bir ulusu özgürlüğe kavuşturmakla kalmamış, gelecek nesillere ilham veren kalıcı bir miras bırakmıştır. Atatürk, fikirleri ve eserleriyle bugün de saygı, minnet ve hayranlıkla anılan büyük bir liderdir.',
+        'Dünya tarihinin en büyük devrimcilerinden Gazi Mustafa Kemal Atatürk\'e duyduğumuz sonsuz sevgi, saygı ve minnetle onu yaşatmaya çalışıyoruz. Atatürk üzerine çalışmak bizim için en büyük onur, ilham ve sorumluluktur; onun aziz hatırasını gelecek nesillere aktarmak ve unutturmamak en büyük idealimiz ve varlık sebebimizdir.'
+      ]
+  } },
+  { slug:'yurtdisi',       name:'Yurtdışı Çalışmaları', intro:{
+      title:'Yurtdışı Çalışmalarımız',
+      paragraphs:[
+        'Yurt dışındaki müzeler ve bilim merkezleri için, tarihe yön veren bilim insanlarını ve onların buluşlarını konu alan özel çalışmalar hazırlıyoruz. Bu isimleri en ince ayrıntısına kadar araştırarak gerçekçi heykellerle canlandırırken, icatlarını dönemine özgü dekorlar ve birebir ölçekte yeniden üretilmiş düzeneklerle ziyaretçilerin karşısına çıkarıyoruz.',
+        'Sergilenen her mekanizmayı, ilk tasarımına sadık kalarak — modern teknolojiye başvurmadan, dönemin malzeme ve yöntemleriyle — yeniden inşa ediyoruz. Amacımız yalnızca bir buluşu göstermek değil, o buluşun ardındaki emeği, dehayı ve dönemin ruhunu olduğu gibi yaşatmaktır. Bu anlayışla ürettiğimiz eserler, bugün dünyanın farklı ülkelerindeki müze ve bilim merkezlerinde sergilenmeye devam ediyor.'
       ]
   } },
   { slug:'film-tv',        name:'Film, TV, Reklam Setleri', intro:{
