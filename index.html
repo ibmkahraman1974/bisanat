@@ -445,6 +445,28 @@
     .lb-meta .lb-counter{margin-top:7px;font-size:10px}
   }
 
+  /* Arşiv — 3 kartlı giriş görünümü */
+  .archive-hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;max-width:1180px;margin:0 auto}
+  .archive-card{position:relative;padding:38px 30px 34px;border-radius:10px;text-align:center;
+    background:linear-gradient(160deg, rgba(201,150,46,.06), rgba(255,255,255,0) 55%), var(--card);
+    border:1px solid rgba(138,106,44,.28);box-shadow:0 12px 28px -22px rgba(0,0,0,.5);
+    display:flex;flex-direction:column;align-items:center;
+    transition:box-shadow .3s ease, border-color .3s ease, transform .25s ease}
+  .archive-card:hover{border-color:var(--gold-3);box-shadow:0 18px 38px -22px rgba(0,0,0,.55);transform:translateY(-3px)}
+  .archive-card .eyebrow{margin-bottom:14px}
+  .archive-card h3{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--cream);margin-bottom:14px}
+  .archive-card p{color:var(--text-soft);font-size:14.5px;line-height:1.75;margin-bottom:26px;flex:1}
+  .archive-card .wa-btn{padding:12px 30px;font-size:12px}
+
+  .archive-detail{max-width:1180px;margin:0 auto}
+  #archiveStats{margin-top:0;margin-bottom:50px}
+  .archive-back-wrap{text-align:center}
+  .archive-back{display:inline-flex;align-items:center;gap:8px;margin:0 auto 34px;padding:10px 22px;
+    border-radius:999px;border:1px solid rgba(138,106,44,.4);background:transparent;color:var(--text-soft);
+    font-family:'Montserrat';font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;cursor:pointer;
+    transition:border-color .25s ease, color .25s ease}
+  .archive-back:hover{border-color:var(--gold-3);color:var(--gold-2)}
+
   /* Yurtdışı timeline — arşiv kartı estetiğiyle uyumlu */
   .timeline{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
   .t-item{display:flex;align-items:center;gap:16px;position:relative;
@@ -827,7 +849,7 @@ body.intro-lock{overflow:hidden}
   </button>
   <nav id="mainNav">
     <a href="#anasayfa">Anasayfa</a><a href="#hiperrealizm">Aşırı Gerçekçilik</a>
-    <a href="#eserler">Eserler</a><a href="#yurtdisi">Yurtdışı</a><a href="#arsiv">Arşiv</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#iletisim">İletişim</a>
+    <a href="#eserler">Eserler</a><a href="#arsiv">Arşiv</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#iletisim">İletişim</a>
   </nav>
 </header>
 
@@ -846,12 +868,6 @@ body.intro-lock{overflow:hidden}
     <div class="eyebrow" id="heroEyebrow">bisanat atölyesi</div>
     <h1 id="heroTitle">Gerçeğin ötesinde<br>bir <em>gerçeklik.</em></h1>
     <p class="sub" id="heroSub"><span class="brand-hl">bisanat</span> atölyesinde her eser, gerçeğin sınırlarını zorlayan bir tutkuyla doğar. Bülent İşcan'ın hiperrealist heykelleri, Şenay İşcan'ın usta sanat yönetmenliğiyle buluşunca tarih artık anlatılmaz — karşınızda nefes alır.</p>
-  </div>
-  <div class="stats-strip">
-    <div class="stat"><b id="stat1Num">1000+</b><span id="stat1Label">Üretilen hiperrealist eser</span></div>
-    <div class="stat"><b id="stat2Num">90+</b><span id="stat2Label">Yurt içi müze projesi</span></div>
-    <div class="stat"><b id="stat3Num">10</b><span id="stat3Label">Ülkede sergilenen eser</span></div>
-    <div class="stat"><b id="stat4Num">20+</b><span id="stat4Label">Yıl sinema / TV deneyimi</span></div>
   </div>
 </div>
 
@@ -1008,7 +1024,39 @@ body.intro-lock{overflow:hidden}
   </div>
 </div>
 
-<section id="yurtdisi" class="section-alt">
+<section id="arsiv" class="section-alt">
+  <div class="section-head"><div class="eyebrow">Arşiv</div><h2>Atölye Arşivi</h2></div>
+  <p class="lede">Yirmi yılı aşkın atölye üretiminin tamamı: yurt dışı müze projeleri, yurt içi müze çalışmaları ve sinema / dizi / reklam dekor-aksesuar işleri.</p>
+  <div class="stats-strip" id="archiveStats">
+    <div class="stat"><b id="stat1Num">1000+</b><span id="stat1Label">Üretilen hiperrealist eser</span></div>
+    <div class="stat"><b id="stat2Num">90+</b><span id="stat2Label">Yurt içi müze projesi</span></div>
+    <div class="stat"><b id="stat3Num">10</b><span id="stat3Label">Ülkede sergilenen eser</span></div>
+    <div class="stat"><b id="stat4Num">20+</b><span id="stat4Label">Yıl sinema / TV deneyimi</span></div>
+  </div>
+
+  <div class="archive-hub" id="archiveHub">
+    <div class="archive-card">
+      <div class="eyebrow">10 ülke</div>
+      <h3>Yurt dışı müze çalışmaları</h3>
+      <p>2012'den bu yana Türkiye sınırlarının ötesinde: Körfez'den Uzak Doğu'ya, Balkanlar'dan Avrupa'ya.</p>
+      <button class="wa-btn archive-detay-btn" type="button" data-target="yurtdisiDetail">Detaylar</button>
+    </div>
+    <div class="archive-card">
+      <div class="eyebrow">Arşiv · 2005—2026</div>
+      <h3>Yirmi yıllık üretim</h3>
+      <p>Yurt içi müze projeleri yıllara göre; sinema, dizi ve reklam dekor/aksesuar çalışmaları aşağıda.</p>
+      <button class="wa-btn archive-detay-btn" type="button" data-target="arsivDetail">Detaylar</button>
+    </div>
+    <div class="archive-card">
+      <div class="eyebrow">Dekor / Aksesuar</div>
+      <h3>Sinema, dizi, reklam ve fotoğraf</h3>
+      <p>Yirmi yılı aşkın süredir sinema, TV, reklam, fotoğraf ve sahne sektörüne üretilen dekor ve aksesuar çalışmalarının tam listesi — yıl, proje, yönetmen ve yapımcı bilgileriyle.</p>
+      <button class="wa-btn archive-detay-btn" type="button" data-target="dekorDetail">Detaylar</button>
+    </div>
+  </div>
+
+  <div class="archive-detail" id="yurtdisiDetail" style="display:none">
+  <div class="archive-back-wrap"><button class="archive-back" type="button">&#8592; Kartlara dön</button></div>
   <div class="section-head"><div class="eyebrow">10 ülke</div><h2>Yurt dışı müze çalışmaları</h2></div>
   <p class="lede">2012'den bu yana Türkiye sınırlarının ötesinde: Körfez'den Uzak Doğu'ya, Balkanlar'dan Avrupa'ya.</p>
   <div class="timeline">
@@ -1024,9 +1072,10 @@ body.intro-lock{overflow:hidden}
     <div class="t-item"><b>2013</b><span>İçişleri Bakanlığı Sergi Merkezi — Türkmenistan</span></div>
     <div class="t-item"><b>2012</b><span>Space Centre Museum — Azerbaycan</span></div>
   </div>
-</section>
+  </div>
 
-<section id="arsiv">
+  <div class="archive-detail" id="arsivDetail" style="display:none">
+  <div class="archive-back-wrap"><button class="archive-back" type="button">&#8592; Kartlara dön</button></div>
   <div class="section-head"><div class="eyebrow">Arşiv · 2005—2026</div><h2>Yirmi yıllık üretim</h2></div>
   <p class="lede">Yurt içi müze projeleri yıllara göre; sinema, dizi ve reklam dekor/aksesuar çalışmaları aşağıda.</p>
   <div class="archive">
@@ -1162,13 +1211,15 @@ body.intro-lock{overflow:hidden}
       </ul>
     </details>
   </div>
-</section>
+  </div>
 
-<section class="section-alt" id="dekor">
+  <div class="archive-detail" id="dekorDetail" style="display:none">
+  <div class="archive-back-wrap"><button class="archive-back" type="button">&#8592; Kartlara dön</button></div>
   <div class="section-head"><div class="eyebrow">Dekor / Aksesuar</div><h2>Sinema, dizi, reklam ve fotoğraf</h2></div>
   <p class="lede">Yirmi yılı aşkın süredir sinema, TV, reklam, fotoğraf ve sahne sektörüne üretilen dekor ve aksesuar çalışmalarının tam listesi — yıl, proje, yönetmen ve yapımcı bilgileriyle.</p>
   <div class="decor-tabs" id="decorTabs"></div>
   <div class="decor-panels" id="decorPanels"></div>
+  </div>
 </section>
 
 <section id="iletisim" class="section-alt">
@@ -1773,14 +1824,14 @@ const PAGE_TEXT_FIELDS = [
     hint:'HTML etiketleri kullanılabilir (ör. <br>, <em>vurgulu kelime</em>).' },
   { key:'heroSub',         label:'Hero — Alt Metin',              el:'#heroSub',            mode:'html',
     hint:'HTML etiketleri kullanılabilir (ör. <span class="brand-hl">bisanat</span>).', thumb:'' },
-  { key:'stat1Num',        label:'İstatistik 1 — Sayı',           el:'#stat1Num',           mode:'text' },
-  { key:'stat1Label',      label:'İstatistik 1 — Etiket',         el:'#stat1Label',         mode:'text' },
-  { key:'stat2Num',        label:'İstatistik 2 — Sayı',           el:'#stat2Num',           mode:'text' },
-  { key:'stat2Label',      label:'İstatistik 2 — Etiket',         el:'#stat2Label',         mode:'text' },
-  { key:'stat3Num',        label:'İstatistik 3 — Sayı',           el:'#stat3Num',           mode:'text' },
-  { key:'stat3Label',      label:'İstatistik 3 — Etiket',         el:'#stat3Label',         mode:'text' },
-  { key:'stat4Num',        label:'İstatistik 4 — Sayı',           el:'#stat4Num',           mode:'text' },
-  { key:'stat4Label',      label:'İstatistik 4 — Etiket',         el:'#stat4Label',         mode:'text' },
+  { key:'stat1Num',        label:'Arşiv İstatistik 1 — Sayı',     el:'#stat1Num',           mode:'text' },
+  { key:'stat1Label',      label:'Arşiv İstatistik 1 — Etiket',   el:'#stat1Label',         mode:'text' },
+  { key:'stat2Num',        label:'Arşiv İstatistik 2 — Sayı',     el:'#stat2Num',           mode:'text' },
+  { key:'stat2Label',      label:'Arşiv İstatistik 2 — Etiket',   el:'#stat2Label',         mode:'text' },
+  { key:'stat3Num',        label:'Arşiv İstatistik 3 — Sayı',     el:'#stat3Num',           mode:'text' },
+  { key:'stat3Label',      label:'Arşiv İstatistik 3 — Etiket',   el:'#stat3Label',         mode:'text' },
+  { key:'stat4Num',        label:'Arşiv İstatistik 4 — Sayı',     el:'#stat4Num',           mode:'text' },
+  { key:'stat4Label',      label:'Arşiv İstatistik 4 — Etiket',   el:'#stat4Label',         mode:'text' },
   { key:'bulentBio',       label:'Bülent İşcan — Biyografi',      el:'#bulentBioWrap',      mode:'paragraphs',
     hint:'Paragraflar arasına boş satır bırakın.', thumb:'' },
   { key:'senayBio',        label:'Şenay İşcan — Biyografi',       el:'#senayBioWrap',       mode:'paragraphs',
@@ -2681,6 +2732,33 @@ renderHyperGrid();
       toggle.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
     });
+  });
+})();
+
+/* ---------- Arşiv: 3 kart / Detaylar / Kartlara dön ---------- */
+(function initArchiveHub(){
+  const hub = document.getElementById('archiveHub');
+  if(!hub) return;
+  const details = Array.from(document.querySelectorAll('.archive-detail'));
+
+  function showDetail(id){
+    hub.style.display = 'none';
+    details.forEach(d=> d.style.display = (d.id === id) ? '' : 'none');
+    const target = document.getElementById(id);
+    if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  function showHub(){
+    details.forEach(d=> d.style.display = 'none');
+    hub.style.display = '';
+    hub.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  hub.querySelectorAll('.archive-detay-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> showDetail(btn.dataset.target));
+  });
+  details.forEach(d=>{
+    const backBtn = d.querySelector('.archive-back');
+    if(backBtn) backBtn.addEventListener('click', showHub);
   });
 })();
 
