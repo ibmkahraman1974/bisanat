@@ -205,7 +205,7 @@
   .hyper-gal-head{text-align:center;margin-bottom:30px}
   .hyper-gal-head .eyebrow{margin-bottom:12px}
   .hyper-gal-head h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:32px;color:var(--cream);line-height:1.2}
-  .hyper-gal-head p{max-width:952px;margin:14px auto 0;color:var(--text-soft);font-size:15.5px;line-height:1.8;text-align:justify;text-justify:inter-word;hyphens:auto}
+  .hyper-gal-head p{max-width:952px;margin:14px auto 0;color:var(--text-soft);font-size:15.5px;line-height:1.8;text-align:justify;text-justify:inter-word;hyphens:auto;white-space:pre-line}
   .hyper-gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .hyper-gal-frame{position:relative;padding:0;cursor:pointer;overflow:hidden;aspect-ratio:3/4;
     border-radius:8px;background:linear-gradient(160deg,#ece2c8,#d9caa4);
@@ -299,7 +299,7 @@
   .compare .meta{padding:18px 20px 22px;display:flex;flex-direction:column;flex:1}
   .compare .eyebrow-sm{font-family:'Montserrat';font-size:10.5px;letter-spacing:2px;color:var(--gold-2);text-transform:uppercase;font-weight:600}
   .compare h4{font-family:inherit;font-size:16px;font-weight:600;color:var(--cream);margin:8px 0 6px}
-  .compare .desc{color:var(--text-muted);font-size:13px;line-height:1.65;text-align:justify;text-justify:inter-word;hyphens:auto;flex:1;
+  .compare .desc{color:var(--text-muted);font-size:13px;line-height:1.65;text-align:justify;text-justify:inter-word;hyphens:auto;flex:1;white-space:pre-line;
     display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
   .compare .detay-btn{margin:16px auto 0;display:block;padding:9px 24px;border-radius:999px;
     border:1px solid var(--gold-1);background:transparent;color:var(--gold-2);
@@ -343,7 +343,7 @@
   .piece h4{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream);
     line-height:1.18;min-height:2.36em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .piece .loc{color:var(--text-muted);font-size:13px;margin-top:3px;text-align:left;
-    line-height:1.3;min-height:3.9em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    line-height:1.3;min-height:3.9em;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line}
   /* 'Tümü' görünümündeki kart açıklamaları biraz daha küçük */
   .piece .loc.pc-desc{font-size:11.5px;line-height:1.28;min-height:3.4em}
   /* Görsel çerçevesi — tüm görünümlerde ortak: ince gold border + 3D kabartma */
@@ -413,56 +413,83 @@
 
   .empty-note{grid-column:1/-1;text-align:center;color:var(--text-muted);font-size:14px;padding:30px 0}
 
-  /* Lightbox / slayt gösterisi */
-  .lightbox{position:fixed;inset:0;background:rgba(8,6,3,.98);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:flex-start;flex-direction:column;padding:40px 96px 56px;overflow-y:auto}
+  /* Lightbox / slayt gösterisi — masaüstünde görsel solda, başlık+metin sağda;
+     en altta ortalanmış sayaç/kategori etiketi ile gezinti okları birlikte durur. */
+  .lightbox{position:fixed;inset:0;background:rgba(8,6,3,.98);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;flex-direction:column;padding:40px 60px;overflow-y:auto}
   .lightbox.open{display:flex}
-  .lightbox img{width:auto;height:auto;max-width:min(88vw,1200px);max-height:72vh;object-fit:contain;border-radius:6px;box-shadow:0 30px 70px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(212,175,55,.25);border:6px solid transparent;border-image:var(--ribbon-frame) 1;background:#0e0a05;display:block}
+
+  /* Üst blok: görsel (sol) + başlık/paragraf (sağ) */
+  .lb-body{display:flex;align-items:center;justify-content:center;gap:56px;width:100%;max-width:1360px;margin:0 auto}
+  .lb-visual{position:relative;flex:0 1 620px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+
+  .lightbox img{width:auto;height:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:6px;box-shadow:0 30px 70px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(212,175,55,.25);border:6px solid transparent;border-image:var(--ribbon-frame) 1;background:#0e0a05;display:block}
   /* Görsel alanı SABİT yükseklikte: açıklama metni ne kadar uzun/kısa olursa
      olsun görsel her zaman bu kutunun ortasında, aynı konumda görünür. */
-  .lb-img-wrap{position:relative;display:flex;align-items:center;justify-content:center;
-    width:100%;max-width:min(94vw,1400px);height:72vh;max-height:72vh;flex:0 0 auto}
+  .lb-img-wrap{position:relative;display:flex;align-items:center;justify-content:center;height:70vh;max-height:70vh}
   /* Görselin gerçek render boyutuna oturan iç sarmalayıcı: filigran (logo + telif)
      bu kutuya göre konumlanır, böylece görselin boş bıraktığı kenarlarda değil
      her zaman fotoğrafın kendi köşesinde kalır. */
-  .lb-img-inner{position:relative;display:inline-flex;max-width:100%}
+  .lb-img-inner{position:relative;display:inline-flex;max-width:100%;max-height:100%}
   .lb-watermark{position:absolute;right:18px;bottom:14px;display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none;user-select:none;z-index:2;text-align:center}
   .lb-watermark-badge{width:52px;height:52px;display:flex;align-items:center;justify-content:center}
   .lb-watermark-badge img{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;border:none;border-image:none;border-radius:0;box-shadow:none;background:none;-webkit-user-drag:none;user-select:none}
   .lb-watermark span{font-family:'Montserrat',sans-serif;font-weight:400;font-size:10px;letter-spacing:.5px;
     color:rgba(255,246,223,.85);text-shadow:0 1px 3px rgba(0,0,0,.9), 0 0 8px rgba(0,0,0,.5)}
   .lightbox img.broken{display:none}
-  .lb-fallback{display:none;width:min(920px,88vw);height:min(64vh,420px);border-radius:4px;align-items:center;justify-content:center;
+  .lb-fallback{display:none;width:min(560px,50vw);height:min(64vh,420px);border-radius:4px;align-items:center;justify-content:center;
     flex-direction:column;gap:8px;background:linear-gradient(160deg,#ece2c8,#d9caa4);color:#5a4d38;
     box-shadow:0 30px 70px -20px rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.12)}
   .lb-fallback.show{display:flex}
   .lb-fallback .fb-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:#8a6a2c}
   .lb-fallback .fb-sub{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8f8168}
-  .lb-meta{text-align:center;margin-top:22px;max-width:min(960px,88vw)}
-  .lb-meta h4{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:24px;color:#fff8ea}
-  .lb-meta p{color:#cdbfa2;font-size:14px;margin-top:6px;line-height:1.7}
-  .lb-meta .lb-counter{display:block;margin-top:10px;font-size:11px;letter-spacing:2px;color:var(--gold-1);text-transform:uppercase}
-  .lb-close{position:absolute;top:22px;right:30px;background:none;border:none;color:#e8dcc3;font-size:34px;cursor:pointer;line-height:1;opacity:.85}
+
+  /* Sağ taraf: başlık + paragraf, sola hizalı ve düzenli aralıklı */
+  .lb-meta{flex:1 1 380px;max-width:440px;text-align:left}
+  .lb-meta h4{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.28;color:#fff8ea;
+    position:relative;padding-bottom:16px;margin-bottom:16px}
+  .lb-meta h4::after{content:"";position:absolute;left:0;bottom:0;width:44px;height:2px;background:linear-gradient(90deg,var(--gold-1),var(--gold-3))}
+  .lb-meta p{color:#cdbfa2;font-size:15px;line-height:1.85;white-space:pre-line;text-align:justify;text-justify:inter-word;hyphens:auto}
+
+  /* Alt bar: sayfayı ortalayan sayaç/kategori etiketi + gezinti okları bir arada */
+  .lb-footer{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:36px}
+  .lb-counter{font-size:11px;letter-spacing:2px;color:var(--gold-1);text-transform:uppercase;text-align:center;min-width:170px}
+
+  .lb-close{position:absolute;top:22px;right:30px;background:none;border:none;color:#e8dcc3;font-size:34px;cursor:pointer;line-height:1;opacity:.85;z-index:5}
   .lb-close:hover{opacity:1;color:var(--gold-1)}
-  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#f7f2e7;width:52px;height:52px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .lb-nav{position:static;transform:none;flex:0 0 auto;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#f7f2e7;width:46px;height:46px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .lb-nav:hover{background:rgba(212,175,55,.25);border-color:var(--gold-1)}
-  .lb-prev{left:-72px}
-  .lb-next{right:-72px}
+
+  @media (max-width:1100px){
+    .lb-body{gap:32px}
+    .lb-visual{flex-basis:520px}
+    .lb-meta h4{font-size:25px}
+  }
+  @media (max-width:900px){
+    /* Dar ekranlarda görsel üstte, başlık/metin altında ve ortalı (mobil düzen) */
+    .lb-body{flex-direction:column;max-width:640px}
+    .lb-visual{flex-basis:auto;width:100%}
+    .lb-img-wrap{height:56vh;max-height:56vh}
+    .lightbox img{max-height:56vh;max-width:88vw}
+    .lb-meta{max-width:100%;text-align:center;margin-top:24px}
+    .lb-meta h4{text-align:center}
+    .lb-meta h4::after{left:50%;transform:translateX(-50%)}
+    .lb-meta p{text-align:justify;text-justify:inter-word;hyphens:auto}
+  }
   @media (max-width:640px){
     /* Mobil tam ekran galeri: her şey ekrana sığsın */
-    .lightbox{padding:56px 10px 16px;justify-content:flex-start;overflow-y:auto}
+    .lightbox{padding:56px 14px 24px;overflow-y:auto}
     .lb-close{position:fixed;top:12px;right:14px;font-size:30px;z-index:120;
       width:44px;height:44px;display:flex;align-items:center;justify-content:center;
       background:rgba(0,0,0,.45);border-radius:50%;opacity:1}
-    .lb-img-wrap{position:relative;width:100%;height:58vh;max-height:58vh}
-    .lightbox img{max-height:58vh;max-width:88vw}
-    /* önceki/sonraki oklar görselin altında, iki yanda */
-    .lb-nav{width:44px;height:44px;font-size:17px;top:auto;transform:none;bottom:-58px}
-    .lb-prev{left:calc(50% - 66px)}
-    .lb-next{right:calc(50% - 66px)}
-    .lb-meta{margin-top:66px;max-width:92vw}
-    .lb-meta h4{font-size:18px}
-    .lb-meta p{font-size:11px;line-height:1.45;margin-top:5px;-webkit-line-clamp:3}
-    .lb-meta .lb-counter{margin-top:7px;font-size:10px}
+    .lb-img-wrap{height:52vh;max-height:52vh}
+    .lightbox img{max-height:52vh;max-width:88vw}
+    .lb-fallback{width:88vw}
+    .lb-meta{margin-top:18px}
+    .lb-meta h4{font-size:19px;padding-bottom:12px;margin-bottom:12px}
+    .lb-meta p{font-size:12.5px;line-height:1.6}
+    .lb-footer{margin-top:20px;gap:16px}
+    .lb-nav{width:40px;height:40px;font-size:15px}
+    .lb-counter{font-size:10px;min-width:auto}
   }
 
   /* Arşiv — 3 kartlı giriş görünümü */
@@ -1022,36 +1049,48 @@ body.intro-lock{overflow:hidden}
 
 <div class="lightbox" id="lightbox">
   <button class="lb-close" id="lbClose" aria-label="Kapat">&times;</button>
-  <div class="lb-img-wrap">
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Önceki">&#10094;</button>
-    <div class="lb-img-inner">
-      <img id="lbImg" src="" alt="">
-      <span class="lb-watermark"><span class="lb-watermark-badge"><img src="assets/main/logo.webp" alt="bisanat logo"></span><span>&copy; Tüm Hakları Saklıdır</span></span>
+  <div class="lb-body">
+    <div class="lb-visual">
+      <div class="lb-img-wrap">
+        <div class="lb-img-inner">
+          <img id="lbImg" src="" alt="">
+          <span class="lb-watermark"><span class="lb-watermark-badge"><img src="assets/main/logo.webp" alt="bisanat logo"></span><span>&copy; Tüm Hakları Saklıdır</span></span>
+        </div>
+      </div>
+      <div class="lb-fallback" id="lbFallback"><span class="fb-name" id="lbFbName"></span><span class="fb-sub">Görsel eklenmedi</span></div>
     </div>
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Sonraki">&#10095;</button>
+    <div class="lb-meta">
+      <h4 id="lbTitle"></h4>
+      <p id="lbDesc"></p>
+    </div>
   </div>
-  <div class="lb-fallback" id="lbFallback"><span class="fb-name" id="lbFbName"></span><span class="fb-sub">Görsel eklenmedi</span></div>
-  <div class="lb-meta">
-    <h4 id="lbTitle"></h4>
-    <p id="lbDesc"></p>
+  <div class="lb-footer">
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Önceki">&#10094;</button>
     <span class="lb-counter" id="lbCounter"></span>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Sonraki">&#10095;</button>
   </div>
 </div>
 
 <div class="lightbox" id="hyperLightbox">
   <button class="lb-close" id="hyperLbClose" aria-label="Kapat">&times;</button>
-  <div class="lb-img-wrap">
-    <button class="lb-nav lb-prev" id="hyperLbPrev" aria-label="Önceki">&#10094;</button>
-    <div class="lb-img-inner">
-      <img id="hyperLbImg" src="" alt="">
-      <span class="lb-watermark"><span class="lb-watermark-badge"><img src="assets/main/logo.webp" alt="bisanat logo"></span><span>&copy; Tüm Hakları Saklıdır</span></span>
+  <div class="lb-body">
+    <div class="lb-visual">
+      <div class="lb-img-wrap">
+        <div class="lb-img-inner">
+          <img id="hyperLbImg" src="" alt="">
+          <span class="lb-watermark"><span class="lb-watermark-badge"><img src="assets/main/logo.webp" alt="bisanat logo"></span><span>&copy; Tüm Hakları Saklıdır</span></span>
+        </div>
+      </div>
     </div>
-    <button class="lb-nav lb-next" id="hyperLbNext" aria-label="Sonraki">&#10095;</button>
+    <div class="lb-meta">
+      <h4 id="hyperLbTitle"></h4>
+      <p id="hyperLbDesc"></p>
+    </div>
   </div>
-  <div class="lb-meta">
-    <h4 id="hyperLbTitle"></h4>
-    <p id="hyperLbDesc"></p>
+  <div class="lb-footer">
+    <button class="lb-nav lb-prev" id="hyperLbPrev" aria-label="Önceki">&#10094;</button>
     <span class="lb-counter" id="hyperLbCounter"></span>
+    <button class="lb-nav lb-next" id="hyperLbNext" aria-label="Sonraki">&#10095;</button>
   </div>
 </div>
 
