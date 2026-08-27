@@ -419,8 +419,8 @@
   .lightbox.open{display:flex}
 
   /* Üst blok: görsel (sol) + başlık/paragraf (sağ) */
-  .lb-body{display:flex;align-items:center;justify-content:center;gap:56px;width:100%;max-width:1360px;margin:0 auto}
-  .lb-visual{position:relative;flex:0 1 620px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .lb-body{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:56px;row-gap:36px;width:100%;max-width:1360px;margin:0 auto}
+  .lb-visual{position:relative;flex:0 1 620px;display:flex;flex-direction:column;align-items:center;justify-content:center;order:1}
 
   .lightbox img{width:auto;height:auto;max-width:100%;max-height:70vh;object-fit:contain;border-radius:6px;box-shadow:0 30px 70px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(212,175,55,.25);border:6px solid transparent;border-image:var(--ribbon-frame) 1;background:#0e0a05;display:block}
   /* Görsel alanı SABİT yükseklikte: açıklama metni ne kadar uzun/kısa olursa
@@ -444,14 +444,14 @@
   .lb-fallback .fb-sub{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#8f8168}
 
   /* Sağ taraf: başlık + paragraf, sola hizalı ve düzenli aralıklı */
-  .lb-meta{flex:1 1 380px;max-width:440px;text-align:left}
+  .lb-meta{flex:1 1 380px;max-width:440px;text-align:left;order:2}
   .lb-meta h4{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:30px;line-height:1.28;color:#fff8ea;
     position:relative;padding-bottom:16px;margin-bottom:16px}
   .lb-meta h4::after{content:"";position:absolute;left:0;bottom:0;width:44px;height:2px;background:linear-gradient(90deg,var(--gold-1),var(--gold-3))}
   .lb-meta p{color:#cdbfa2;font-size:15px;line-height:1.85;white-space:pre-line;text-align:justify;text-justify:inter-word;hyphens:auto}
 
   /* Alt bar: sayfayı ortalayan sayaç/kategori etiketi + gezinti okları bir arada */
-  .lb-footer{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:36px}
+  .lb-footer{display:flex;align-items:center;justify-content:center;gap:22px;margin-top:0;order:3;flex-basis:100%}
   .lb-counter{font-size:11px;letter-spacing:2px;color:var(--gold-1);text-transform:uppercase;text-align:center;min-width:170px}
 
   .lb-close{position:absolute;top:22px;right:30px;background:none;border:none;color:#e8dcc3;font-size:34px;cursor:pointer;line-height:1;opacity:.85;z-index:5}
@@ -465,12 +465,14 @@
     .lb-meta h4{font-size:25px}
   }
   @media (max-width:900px){
-    /* Dar ekranlarda görsel üstte, başlık/metin altında ve ortalı (mobil düzen) */
-    .lb-body{flex-direction:column;max-width:640px}
-    .lb-visual{flex-basis:auto;width:100%}
+    /* Dar ekranlarda görsel üstte, hemen altında gezinti okları,
+       ardından başlık/metin — hepsi ortalı (mobil düzen) */
+    .lb-body{flex-direction:column;max-width:640px;row-gap:16px}
+    .lb-visual{flex-basis:auto;width:100%;order:1}
+    .lb-footer{order:2;flex-basis:auto}
     .lb-img-wrap{height:56vh;max-height:56vh}
     .lightbox img{max-height:56vh;max-width:88vw}
-    .lb-meta{max-width:100%;text-align:center;margin-top:24px}
+    .lb-meta{max-width:100%;text-align:center;margin-top:24px;order:3}
     .lb-meta h4{text-align:center}
     .lb-meta h4::after{left:50%;transform:translateX(-50%)}
     .lb-meta p{text-align:justify;text-justify:inter-word;hyphens:auto}
@@ -487,7 +489,7 @@
     .lb-meta{margin-top:18px}
     .lb-meta h4{font-size:19px;padding-bottom:12px;margin-bottom:12px}
     .lb-meta p{font-size:12.5px;line-height:1.6}
-    .lb-footer{margin-top:20px;gap:16px}
+    .lb-footer{gap:16px}
     .lb-nav{width:40px;height:40px;font-size:15px}
     .lb-counter{font-size:10px;min-width:auto}
   }
@@ -1059,15 +1061,15 @@ body.intro-lock{overflow:hidden}
       </div>
       <div class="lb-fallback" id="lbFallback"><span class="fb-name" id="lbFbName"></span><span class="fb-sub">Görsel eklenmedi</span></div>
     </div>
+    <div class="lb-footer">
+      <button class="lb-nav lb-prev" id="lbPrev" aria-label="Önceki">&#10094;</button>
+      <span class="lb-counter" id="lbCounter"></span>
+      <button class="lb-nav lb-next" id="lbNext" aria-label="Sonraki">&#10095;</button>
+    </div>
     <div class="lb-meta">
       <h4 id="lbTitle"></h4>
       <p id="lbDesc"></p>
     </div>
-  </div>
-  <div class="lb-footer">
-    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Önceki">&#10094;</button>
-    <span class="lb-counter" id="lbCounter"></span>
-    <button class="lb-nav lb-next" id="lbNext" aria-label="Sonraki">&#10095;</button>
   </div>
 </div>
 
@@ -1082,15 +1084,15 @@ body.intro-lock{overflow:hidden}
         </div>
       </div>
     </div>
+    <div class="lb-footer">
+      <button class="lb-nav lb-prev" id="hyperLbPrev" aria-label="Önceki">&#10094;</button>
+      <span class="lb-counter" id="hyperLbCounter"></span>
+      <button class="lb-nav lb-next" id="hyperLbNext" aria-label="Sonraki">&#10095;</button>
+    </div>
     <div class="lb-meta">
       <h4 id="hyperLbTitle"></h4>
       <p id="hyperLbDesc"></p>
     </div>
-  </div>
-  <div class="lb-footer">
-    <button class="lb-nav lb-prev" id="hyperLbPrev" aria-label="Önceki">&#10094;</button>
-    <span class="lb-counter" id="hyperLbCounter"></span>
-    <button class="lb-nav lb-next" id="hyperLbNext" aria-label="Sonraki">&#10095;</button>
   </div>
 </div>
 
