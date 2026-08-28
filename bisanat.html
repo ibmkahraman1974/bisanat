@@ -901,26 +901,61 @@ body.intro-lock{overflow:hidden}
     <a href="#anasayfa">Anasayfa</a><a href="#hiperrealizm">Sanatta Bir Yaklaşım</a>
     <a href="#eserler">Eserler</a><a href="#arsiv">Arşiv</a><a href="#hakkinda" id="navHakkinda">Hakkında</a><a href="#iletisim">İletişim</a>
     <select id="langSelect" class="lang-select notranslate" aria-label="Dil seçimi / Language" translate="no">
-      <option value="tr">🇹🇷 Türkçe</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="ar">🇸🇦 العربية</option>
-      <option value="zh-CN">🇨🇳 中文</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="fr">🇫🇷 Français</option>
-      <option value="de">🇩🇪 Deutsch</option>
-      <option value="ru">🇷🇺 Русский</option>
-      <option value="pt">🇵🇹 Português</option>
-      <option value="it">🇮🇹 Italiano</option>
-      <option value="ja">🇯🇵 日本語</option>
-      <option value="ko">🇰🇷 한국어</option>
-      <option value="hi">🇮🇳 हिन्दी</option>
-      <option value="fa">🇮🇷 فارسی</option>
-      <option value="nl">🇳🇱 Nederlands</option>
-      <option value="el">🇬🇷 Ελληνικά</option>
-      <option value="pl">🇵🇱 Polski</option>
-      <option value="sv">🇸🇪 Svenska</option>
-      <option value="id">🇮🇩 Bahasa Indonesia</option>
-      <option value="vi">🇻🇳 Tiếng Việt</option>
+      <optgroup label="Ana / Uluslararası Diller">
+        <option value="tr">🇹🇷 Türkçe</option>
+        <option value="en">🇬🇧 İngilizce</option>
+        <option value="de">🇩🇪 Almanca</option>
+        <option value="fr">🇫🇷 Fransızca</option>
+        <option value="bg">🇧🇬 Bulgarca</option>
+        <option value="el">🇬🇷 Yunanca</option>
+        <option value="ar">🇸🇦 Arapça</option>
+        <option value="ru">🇷🇺 Rusça</option>
+        <option value="fa">🇮🇷 Farsça</option>
+        <option value="zh-CN">🇨🇳 Çince</option>
+      </optgroup>
+      <optgroup label="Türk Dünyası">
+        <option value="az">🇦🇿 Azerbaycanca</option>
+        <option value="kk">🇰🇿 Kazakça</option>
+        <option value="uz">🇺🇿 Özbekçe</option>
+        <option value="ky">🇰🇬 Kırgızca</option>
+        <option value="tk">🇹🇲 Türkmence</option>
+        <option value="tt">🏳️ Tatarca</option>
+        <option value="ug">🏳️ Uygurca</option>
+        <option value="ba">🏳️ Başkurtça</option>
+        <option value="crh">🏳️ Kırım Tatarcası</option>
+      </optgroup>
+      <optgroup label="Balkanlar ve Doğu Avrupa">
+        <option value="ro">🇷🇴 Rumence / Moldovanca</option>
+        <option value="sq">🇦🇱 Arnavutça</option>
+        <option value="sr">🇷🇸 Sırpça</option>
+        <option value="bs">🇧🇦 Boşnakça</option>
+        <option value="mk">🇲🇰 Makedonca</option>
+        <option value="hr">🇭🇷 Hırvatça</option>
+        <option value="pl">🇵🇱 Lehçe</option>
+        <option value="uk">🇺🇦 Ukraynaca</option>
+        <option value="cs">🇨🇿 Çekçe</option>
+        <option value="sk">🇸🇰 Slovakça</option>
+      </optgroup>
+      <optgroup label="Kafkasya">
+        <option value="ka">🇬🇪 Gürcüce</option>
+        <option value="hy">🇦🇲 Ermenice</option>
+        <option value="ce">🏳️ Çeçence</option>
+        <option value="ab">🏳️ Abhazca</option>
+      </optgroup>
+      <optgroup label="Diğer Önemli Diller">
+        <option value="es">🇪🇸 İspanyolca</option>
+        <option value="it">🇮🇹 İtalyanca</option>
+        <option value="pt">🇵🇹 Portekizce</option>
+        <option value="ja">🇯🇵 Japonca</option>
+        <option value="ko">🇰🇷 Korece</option>
+        <option value="hi">🇮🇳 Hintçe</option>
+        <option value="id">🇮🇩 Endonezce</option>
+        <option value="iw">🇮🇱 İbranice</option>
+        <option value="nl">🇳🇱 Hollandaca</option>
+        <option value="sv">🇸🇪 İsveççe</option>
+        <option value="da">🇩🇰 Danca</option>
+        <option value="no">🇳🇴 Norveççe</option>
+      </optgroup>
     </select>
   </nav>
 </header>
@@ -1490,10 +1525,10 @@ body.intro-lock{overflow:hidden}
 ============================================================ */
 const HYPER_WORKS = [
   
-  { slug:'sanatta-yaklasim-2', title:'Mehmetçik Heykeli',
-    desc:'Çanakkale Tarihi Alan Başkanlığı\'nda sergilenen 5,50 metrelik anıtsal eser; cesaret ve fedakârlığı en ince ayrıntısına dek yansıtan görkemiyle büyük ilgi görüyor.' },
-{ slug:'sanatta-yaklasim-5', title:'Timur Heykeli',
+  { slug:'sanatta-yaklasim-5', title:'Timur Heykeli',
     desc:'Tarihin en güçlü hükümdarlarından Timur, heybetli duruşu ve etkileyici boyutuyla; sarsılmaz iradesini en gerçekçi ayrıntılarla yansıtan bir eserde yeniden hayat buluyor.' },
+{ slug:'sanatta-yaklasim-2', title:'Mehmetçik Heykeli',
+    desc:'Çanakkale Tarihi Alan Başkanlığı\'nda sergilenen 5,50 metrelik anıtsal eser; cesaret ve fedakârlığı en ince ayrıntısına dek yansıtan görkemiyle büyük ilgi görüyor.' },
 { slug:'sanatta-yaklasim-6', title:'Zırhlı Süvari Heykeli',
     desc:'Atının üzerinde güç ve asaleti bir arada taşıyan zırhlı süvari; zırhının her plakası tek tek işlenerek dönemin savaş sanatını olanca ihtişamıyla yansıtıyor.' },
 { slug:'sanatta-yaklasim-4', title:'Yeniçeri Askeri',
@@ -1586,12 +1621,8 @@ const NAMED_HYPER_IMAGES = {
     'Mehmetcik_Heykel_Calismasi_4.webp',
     'Mehmetcik_Heykel_Calismasi_5.webp',
     'Mehmetcik_Heykel_Calismasi_6.webp',
-    'Mehmetcik_Heykel_Calismasi_7.webp',
-    'Mehmetcik_Heykel_Calismasi_8.webp',
     'Mehmetcik_Heykel_Calismasi_9.webp',
-    'Mehmetcik_Heykel_Calismasi_10.webp',
-    'Mehmetcik_Heykel_Calismasi_11.webp',
-    'Mehmetcik_Heykel_Calismasi_12.webp'
+    'Mehmetcik_Heykel_Calismasi_10.webp'
   ],
   'sanatta-yaklasim-2': [
     '1.webp',
@@ -3817,7 +3848,7 @@ document.addEventListener('dragstart', e=>{
   window.googleTranslateElementInit = function(){
     new google.translate.TranslateElement({
       pageLanguage: 'tr',
-      includedLanguages: 'en,ar,zh-CN,es,fr,de,ru,pt,it,ja,ko,hi,fa,nl,el,pl,sv,id,vi',
+      includedLanguages: 'en,de,fr,bg,el,ar,ru,fa,zh-CN,az,kk,uz,ky,tk,tt,ug,ba,crh,ro,sq,sr,bs,mk,hr,pl,uk,cs,sk,ka,hy,ce,ab,es,it,pt,ja,ko,hi,id,iw,nl,sv,da,no',
       autoDisplay: false
     }, 'google_translate_element');
   };
